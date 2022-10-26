@@ -14,3 +14,22 @@
     font-size: 12px;
     text-align: center;
 }
+.lobby{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform: translate(-50%,-50%) scale(0.1);
+    visibility: hidden;
+    text-align: center;
+    visibility:hidden;
+    transition:transform 0.4s,top 0.4s;
+}
+.lobby_present{
+    position: absolute;
+    top:50%;
+    transform: translate(-50%,-50%) scale(1);
+    text-align:center;
+    padding:0 30px 30px;
+    visibility:visible;
+}
+/* cursor:pointer */
