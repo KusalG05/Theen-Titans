@@ -1,0 +1,27 @@
+@media screen and (min-width: 568px) {
+    .cards-wrapper{
+        display: flex;
+        margin: 100px;
+    }
+    .cardy{
+        margin: 0.5em;
+        width: calc(100%/3)
+    }
+    
+    .image-wrapper{
+        height: 22vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .image-wrapper img{
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+/* Add Responsiveness of cards */
+
+
