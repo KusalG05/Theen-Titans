@@ -9,23 +9,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="row">
-        <div class="col game-body">
-            <div class="account">
-                <form action="/account">
-                    <button class="btn btn-primary btn-circle btn-xl" type="submit">Account</button>
-                </form>
-            </div>
-            <div class="title">
-                <h1>Theen Titans</h1>
-            </div>
+    <div class="header">
+        <form action="/account">
+            <button type="submit" class="btn btn-primary">Account</button>
+        </form>
+        <h1 >Drawize</h1>
+        <form action="/team">
+            <button type="submit" class="btn btn-primary">Team</button>
+        </form>
+    </div>
+  <div class="row">
+  <div class="col-3 col-s-3 menu">
             <div class="buttons">
                 <div class="create_game">
                     <button type="button" class="btn btn-primary" onclick="open1()">Create Room</button>
                     <div class="lobby" id="lobby">
                         <h2 id="room_code">Your room Code is: </h2>
                         <h3>Waiting for player to join...</h3>
-                        <button type="button" class="btn btn-primary" onclick="close1()">close</button>
+                        <button type="button" onclick="close1()">close</button>
                     </div>
                     <div class="lobby" id="join">
                       <input type="text">
