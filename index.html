@@ -21,15 +21,17 @@
             </div>
             <div class="buttons">
                 <div class="create_game">
-                    <form action="/draw">
-                        <button type="submit" class="btn btn-primary">Create Room</button>
-                    </form>
+                    <button type="button" class="btn btn-primary" onclick="open1()">Create Room</button>
                     <div class="lobby" id="lobby">
-                        <h2>Your room Code is:1234</h2>
+                        <h2 id="room_code">Your room Code is: </h2>
                         <h3>Waiting for player to join...</h3>
                         <button type="button" class="btn btn-primary" onclick="close1()">close</button>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="open1()">Join Room</button>
+                    <div class="lobby" id="join">
+                      <input type="text">
+                      <button type="button" class="btn btn-primary" onclick="close2()">close</button>
+                    </div>                    
+                      <button type="button" class="btn btn-primary" onclick="open2()"">Join Room</button>
                 </div>
             </div>
             <div class="extra">
@@ -38,15 +40,6 @@
             <div>
                 <h1 class="test"></h1>
             </div>
-        </div>
-        <div class="col leaderboard">
-            <ul class="list-group">
-                <li class="list-group-item">Kushal</li>
-                <li class="list-group-item">Krishna Chaitanya</li>
-                <li class="list-group-item">Saketh</li>
-                <li class="list-group-item">Shashmith</li>
-                <li class="list-group-item">Rishi</li>
-              </ul>
         </div>
       </div>
 </body>
