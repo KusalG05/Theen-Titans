@@ -16,14 +16,18 @@ function open2(){
     open2.classList.add("lobby_present");  
 }
 // const socket=io();
-// var open2=document.getElementById("lobby");
+var open2=document.getElementById("lobby");
 // function open1(){
 //     open2.classList.add("lobby_present");  
 // }
 
-// function close1(){
-//     open2.classList.remove("lobby_present");  
-// }
+function close1(){
+    open2.classList.remove("lobby_present");  
+    document.getElementById("room_code").innerHTML="Your room Code is: ";
+}
+function close2(){
+
+}
 // //--------------------------play-------------------------
 // var input = document.getElementById("myInput");
 
