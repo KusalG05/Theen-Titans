@@ -4,7 +4,9 @@ const app=express();
 const server=require('http').Server(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-
+const room_socket = new Server(server);
+const bodyParser=require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
 //----------------------------starting server-----------------------------------------------------------
 
 //This is for mentioning apply css to the html for all css files inside the path given in the argument which in this case is the same directory(__dirname)
@@ -29,66 +31,16 @@ server.listen(3000, () => {
     //once we start listeing we log the message
     console.log('listening on port 3000')
 });
-//--------------------------------setting up socket connection----------------------------------
-player_id=0
-word="fish";
 
-players=[]
-
-// io.on('connection', (socket) => {
-//     const id=player_id
-//     players.push(id);
-//     socket.emit('id',player_id);
-//     player_id++;
-//     io.emit('players',players);
-//     socket.on('guess',(a)=>{
-//         if(a.guess==word){
-//             io.emit('guess',{guess:a.guess,id:id,correct:true});
-//         }
-//         else{
-//             io.emit('guess',{guess:a.guess,id:id,correct:false});
-//         }
-//     });
-//     socket.on('mouse_up',(a)=>{
-//        socket.emit('mouse_up',a);
-//     });
-//     socket.on('mouse_move',(a)=>{
-//         socket.emit('mouse_move',a);
-//     });
-//     socket.on('mouse_down',(a)=>{
-//         socket.emit('mouse_down',a);
-//     });
-//     socket.on('clears',()=>{
-//         socket.emit('clears');
-//     })
-//     socket.on('writes',()=>{
-//         socket.emit('writes');;
-//     });
-//     socket.on('change_color',(col)=>{
-//         socket.emit('change_color',col);
-//     });
-//     socket.on('change_width',(siz)=>{
-//         socket.emit('change_width',siz);
-//     });
-//     socket.on('erases',()=>{
-//         socket.emit('erases');
-//     });
-//     socket.on('disconnect', function () {
-//         players = players.filter(function (letter) {
-//             return letter !== id;
-//         });
-//         io.emit('players',players);
-//     });
-// });
-
-app.get('/room',(req,res)=>{
-        res.sendFile(__dirname+'/game.html');
+room_socket.on('connection', (socket) => {
+    room_codes=[1234,2345,3456,4567,5678,6789,7890];
+    socket.on('room_code', (room_code) => {
+        console.log(room_codes.includes(parseInt(room_code)));
+        room_socket.emit('íspresent', room_codes.includes(parseInt(room_code)));
+    })
+    
 })
 
-// app.get('/', (req, res) => {
-//     //in response we are sending index.html file
-//     res.sendFile(__dirname + '/index.html');
-// });
 //--------------------------------setting up socket connection----------------------------------
 player_id=0
 zeros=[]
@@ -138,7 +90,7 @@ io.on('connection', (socket) => {
             zeros = zeros.filter(function (letter) {
                 return letter !== id;
             });
-            io.emit('players',zeros);
+            io.to("zero").emit('players',zeros);
         });
     }
     else{
@@ -185,5 +137,5 @@ io.on('connection', (socket) => {
             io.to("one").emit('players',ones);
         });
     }        
-    
 });
+

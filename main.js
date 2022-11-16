@@ -1,8 +1,8 @@
+
+const socket=io();
 function open1(){
     var open2=document.getElementById("lobby");
     let id;
-    socket=io();
-    socket.emit('create_room')
     socket.on('room',(a)=>{
         document.getElementById("room_code").innerHTML=document.getElementById("room_code").innerHTML+a.room_code;
         id=a.id;
@@ -15,13 +15,18 @@ function opened2(){
     let id;
     open2.classList.add("lobby_present");  
 }
-function opened(){
-    socket.emit("join_room");
-}
 function joinroom(){
-    var roomid = document.getElementById("join");
-    socket.emit("connect_to_room", roomid);
+    var roomid = document.getElementById("code").value;
+    socket.emit("room_code", roomid);
 }
+socket.on('íspresent', (a)=>{
+    if(a){
+
+    }
+    else{
+        document.getElementById('join').innerHTML=document.getElementById('join').innerHTML+"<h1>the following room does not exist</h1>"
+    }
+})
 
 var opens2=document.getElementById("lobby");
 function open1(){

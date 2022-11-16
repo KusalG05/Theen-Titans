@@ -107,21 +107,19 @@
               <button type="button" onclick="close1()">close</button>
             </div>
             <div class="lobby" id="join">
-              <form action="/room">
-                <input
-                  type="text"
-                  name="room_code"
-                  placeholder="Enter Room Code"
-                  method="post"
-                />
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  onclick="joinroom()"
-                >
-                  Join Room
-                </button>
-              </form>
+              <input
+                type="text"
+                name="room_code"
+                placeholder="Enter Room Code"
+                id="code"
+              />
+              <button
+                type="submit"
+                class="btn btn-primary"
+                onclick="joinroom()"
+              >
+                Join Room
+              </button>
             </div>
             <button
               type="button"
