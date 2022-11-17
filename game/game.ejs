@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Your room no is <%= room_code %> Enjoy!!</h1>
+    <canvas
+      id="myCanvas"
+      width="800"
+      height="500"
+      style="border: 1px solid #000000"
+    ></canvas>
+    <div class="col">
+      <ul class="list-group" id="players"></ul>
+    </div>
+    <div id="drawing_tools">
+      <button id="trash" onclick="clears()">🗑️</button>
+      <button id="pencil" onclick="writes()">✏️</button>
+      <button>
+        <img
+          width="10"
+          height="20"
+          src="./resources/eraser.png"
+          alt="eraser"
+          id="eraser"
+          onclick="erases()"
+        />
+      </button>
+      <button
+        style="background-color: red; width: 30px; height: 30px"
+        onclick="change_color('red')"
+      ></button>
+      <button
+        style="background-color: blue; width: 30px; height: 30px"
+        onclick="change_color('blue')"
+      ></button>
+      <button
+        style="background-color: green; width: 30px; height: 30px"
+        onclick="change_color('green')"
+      ></button>
+      <button
+        style="background-color: white; width: 30px; height: 30px"
+        onclick="change_color('white')"
+      ></button>
+      <button
+        style="background-color: yellow; width: 30px; height: 30px"
+        onclick="change_color('yellow')"
+      ></button>
+      <button
+        style="background-color: orange; width: 30px; height: 30px"
+        onclick="change_color('orange')"
+      ></button>
+      <button
+        style="background-color: black; width: 30px; height: 30px"
+        onclick="change_color('black')"
+      ></button>
+      <button
+        style="background-color: pink; width: 30px; height: 30px"
+        onclick="change_color('pink')"
+      ></button>
+      <button
+        style="background-color: brown; width: 30px; height: 30px"
+        onclick="change_color('brown')"
+      ></button>
+      <!-- <button style="font-size: 100px;border-color: white;background-color: white;box-shadow: 0 0 white;" onclick="change_width(5)">.</button>
+        <button style="font-size: 700px;border-color: white;background-color: white;box-shadow: 0 0 white;" onclick="change_width(11)">.</button>
+        <button style="font-size: 1000px;border-color: white;background-color: white;box-shadow: 0 0 white;" onclick="change_width(20)">.</button> -->
+    </div>
+    <div id="guess_input">
+      <input type="text" id="myInput" />
+    </div>
+    <div id="id"></div>
+    <div id="guess"></div>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.socket.io/4.5.3/socket.io.min.js"
+    integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    const socket = io();
+    let room_code = "<%-room_code%>";
+    socket.emit("room_code", room_code);
+  </script>
+  <script src="./game.js"></script>
+</html>

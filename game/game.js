@@ -2,14 +2,11 @@
 var input = document.getElementById("myInput");
 
 // Execute a function when the user presses a key on the keyboard
-
 var id;
 var drawer=false;
-const socket=io();
 
 socket.on('room',(a)=>{
     id=a.id;
-    console.log(id);
     if(id%2==0){
         input.addEventListener("keypress", function(event) {
             // If the user presses the "Enter" key on the keyboard
@@ -36,6 +33,7 @@ socket.on('room',(a)=>{
 
 socket.on('players',(a)=>{
     document.getElementById('players').innerHTML=""
+    console.log('hi')
     console.log(a);
     for(var i in a){
         console.log(a[i]);

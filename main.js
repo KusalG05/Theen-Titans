@@ -1,5 +1,4 @@
 
-const socket=io();
 function open1(){
     var open2=document.getElementById("lobby");
     let id;
@@ -19,14 +18,19 @@ function joinroom(){
     var roomid = document.getElementById("code").value;
     socket.emit("room_code", roomid);
 }
-socket.on('íspresent', (a)=>{
-    if(a){
-
-    }
-    else{
-        document.getElementById('join').innerHTML=document.getElementById('join').innerHTML+"<h1>the following room does not exist</h1>"
-    }
-})
+// socket.on('íspresent', (a)=>{
+//     if(a){
+//         fetch( '/game' )
+//         .then( response => response.text() )
+//         .then( response => {
+//             // Do something with response.
+//             document.body.innerHTML=response;
+//         } );
+//     }
+//     else{
+//         document.getElementById('join').innerHTML=document.getElementById('join').innerHTML+"<h1>the following room does not exist</h1>"
+//     }
+// })
 
 var opens2=document.getElementById("lobby");
 function open1(){
@@ -40,4 +44,3 @@ function close1(){
 function close2(){
 
 };
-
