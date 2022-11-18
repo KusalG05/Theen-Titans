@@ -38,12 +38,20 @@ socket.on('guess',(a)=>{
 });
 
 socket.on('drawer',(a)=>{
+    console.log('yeah..')
     if(a!=id){
         context.font = "30px Comic Sans MS";
         context.fillStyle = "red";
         context.textAlign = "center";
         context.fillText("Player " + a + " is choosing a word...",(canvas.width / 2), (canvas.height / 2));
     }
+    else{
+        context.font = "30px Comic Sans MS";
+        context.fillStyle = "red";
+        context.textAlign = "center";
+        context.fillText("Its your turn choose a word",(canvas.width / 2), (canvas.height / 2));
+    }
+    socket.emit('whose_drawer',a)
     document.getElementById("id").innerHTML="Your id is "+id    
 })
 
@@ -68,6 +76,7 @@ socket.on('player_chose',(a)=>{
 })
 
 function send_choice(choice){
+    console.log(choice)
     socket.emit('chosen',choice)
     canvas.addEventListener('touchstart', touchstart, false);
     canvas.addEventListener('touchmove', touchmove, false);
@@ -79,7 +88,17 @@ function send_choice(choice){
 
     document.getElementById("drawing_tools").innerHTML=" <button id=\"trash\" onclick=\"clears()\">🗑️</button>"+'\n'+"<button id=\"pencil\" onclick=\"writes()\">✏️</button>"+'\n'+"<button><img width=\"10\" height=\"20\" src=\"./resources/eraser.png\" alt=\"eraser\" id=\"eraser\" onclick=\"erases()\"/></button> "+'\n'+"<button style=\"background-color: red; width: 30px; height: 30px\" onclick=\"change_color('red')\" ></button>"+'\n'+"<button style=\"background-color: blue; width: 30px; height: 30px\" onclick=\"change_color('blue')\"></button>"+'\n'+"<button style=\"background-color: green; width: 30px; height: 30px\" onclick=\"change_color('green')\"></button>"+'\n'+"<button style=\"background-color: white; width: 30px; height: 30px\" onclick=\"change_color('white')\"></button>"+'\n'+"<button   style=\"background-color: yellow; width: 30px; height: 30px\" onclick=\"change_color('yellow')\"></button>"+'\n'+"<button style=\"background-color: orange; width: 30px; height: 30px\" onclick=\"change_color('orange')\"></button>"+'\n'+"<button style=\"background-color: black; width: 30px; height: 30px\" onclick=\"change_color('black')\"></button>"+'\n'+"<button style=\"background-color: pink; width: 30px; height: 30px\" onclick=\"change_color('pink')\"></button>"+'\n'+"<button style=\"background-color: brown; width: 30px; height: 30px\" onclick=\"change_color('brown')\" ></button>";
     document.getElementById("choose").innerHTML=""
+    //context.clearRect(0,0,canvas.width,canvas.height);
 }
+
+socket.on('restart',()=>{
+    context.clearRect(0,0,canvas.width,canvas.height)
+    document.getElementById('drawarea').innerHTML=document.getElementById('drawarea').innerHTML+'\n'+"<div class=\"lobby\" id=\"scores\"> <div class=\"col-3 col-s-12\">  <h3 style=\"text-align: center\">Leaderboard</h3> <div class=\"aside\"> <h2>Vinay 7</h2> <h2>Saketh 6</h2>    <h2>Krishna FR</h2> <h2>Kusal 69</h2> <h2>Chuchu AP</h2> </div> </div> </div>"
+    var open2=document.getElementById("scores");
+    open2.classList.add("lobby_present");
+    setTimeout(()=>{open2.classList.remove("lobby_present");
+    socket.emit('start')},5000);  
+})
 
 function passToServer(a){
     console.log("pass")

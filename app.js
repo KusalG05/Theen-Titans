@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 //This is for mentioning apply css to the html for all css files inside the path given in the argument which in this case is the same directory(__dirname)
 app.use(express.static(__dirname));
 app.use(express.static(__dirname+"/Profile"));
+//app.use(express.static(__dirname+"/game/resources"));
 
 
 //---------------------------------play----------------------------------------
@@ -54,37 +55,52 @@ io.on('connection', (socket) => {
     var room;
     var word
     socket.on('room_code', (room_no) => {
-        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room].push({'id':id,'score':0});console.log(room_members[room][0].id);
+        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room].push({'id':id,'score':0});
         socket.emit('room',{room_code:room,id:id});
         io.to(room).emit('players',room_members[room]);
+        let decider_id
         let drawer_id
         if(room_members[room][1]!=null){    
-            drawer_id=room_members[room][1].id
+            decider_id=room_members[room][1].id
         }
-        if(id==drawer_id){
-            var word1 = words[Math.floor(Math.random()*words.length)];
-            var word2 = words[Math.floor(Math.random()*words.length)];
-            while(word2==word1){
-                word2 = words[Math.floor(Math.random()*words.length)];
-            }
-            var word3 = words[Math.floor(Math.random()*words.length)];
-            while(word1==word3 || word2==word3){
-                word3 = words[Math.floor(Math.random()*words.length)];
-            }
-            console.log(word1+word2+word3);
-            socket.emit('choose',{word1:word1, word2:word2, word3:word3});
-            socket.broadcast.emit('drawer',drawer_id);
-            var counter = 60;
+        if(id==decider_id){
+            drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
+            io.to(room).emit('drawer',drawer_id);
         }
+        socket.on('whose_drawer',(a)=>{
+            drawer_id=a;
+            if(id==drawer_id){
+                console.log("yes")
+                var word1 = words[Math.floor(Math.random()*words.length)];
+                var word2 = words[Math.floor(Math.random()*words.length)];
+                while(word2==word1){
+                    word2 = words[Math.floor(Math.random()*words.length)];
+                }
+                var word3 = words[Math.floor(Math.random()*words.length)];
+                while(word1==word3 || word2==word3){
+                    word3 = words[Math.floor(Math.random()*words.length)];
+                }
+                console.log(word1+word2+word3);
+                socket.emit('choose',{word1:word1, word2:word2, word3:word3});
+            }
+        })
+        socket.on('start',()=>{
+            console.log('hi');
+            if(id==decider_id){
+                drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
+                io.to(room).emit('drawer',drawer_id);
+            }
+        })
         socket.on('chosen',(choice)=>{
             word=choice;
             socket.broadcast.emit('player_chose',choice);
+            var counter = 5;
             var timer = setInterval(()=>{
                 io.to(room).emit('counter', counter);
                 console.log(counter)
                 counter--
                 if (counter === 0) {
-                    io.to(room).emit('counter', "Congratulations You WON!!");
+                    io.to(room).emit('restart',room_members);
                     clearInterval(timer);
                 }
             }, 1000);
@@ -132,13 +148,20 @@ io.on('connection', (socket) => {
                             room_members[room][i].score+a.time;
                         }
                     }
-                    room_members
                 }
                 else{
                     io.to(room).emit('guess',{guess:a.guess,id:id,correct:false});
                     room_members[room]
                 }
         })})
+        socket.on('disconnect', function () {
+            room_members[room] = room_members[room].filter(function (letter) {
+                console.log(letter.id)
+                return letter.id !== id;
+            });
+            io.to(room).emit('players',room_members[room]);
+        });
+
 }); 
 });
 
