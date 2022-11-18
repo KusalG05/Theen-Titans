@@ -2,22 +2,19 @@
 // Execute a function when the user presses a key on the keyboard
 var id;
 var drawer=false;
-
+var timer
 socket.on('room',(a)=>{
     id=a.id;
 });
 
 socket.on('players',(a)=>{
     document.getElementById('players').innerHTML=""
-    console.log('hi')
-    console.log(a);
     for(var i in a){
-        console.log(a[i]);
-        if(a[i]==id){
-            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:750px; background-color:#81db76'>"+a[i]+"</li>"
+        if(a[i].id==id){
+            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:750px; background-color:#81db76'>"+a[i].id+"</li>"
         }
         else{
-            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:750px'>"+a[i]+"</li>"
+            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:750px'>"+a[i].id+"</li>"
         }
     }
 })
@@ -32,7 +29,7 @@ socket.on('guess',(a)=>{
     }
     if(a.correct){
         message=message+"correct word"
-        document.getElementById("guess_input").disabled = true;
+        document.getElementById("myInput").disabled = true;
     }
     else{
         message=message+a.guess
@@ -55,7 +52,7 @@ socket.on("choose",(a)=>{
     document.getElementById('choose').innerHTML="<button onclick=\"send_choice(\'"+String(a.word1)+"\')\">"+String(a.word1)+"</button>"+'\n'+"<button onclick=\"send_choice(\'"+String(a.word2)+"\')\">"+String(a.word2)+"</button>"+'\n'+"<button onclick=\"send_choice(\'"+String(a.word3)+"\')\">"+String(a.word3)+"</button>"
 });
 
-socket.on('player_chose',()=>{
+socket.on('player_chose',(a)=>{
     document.getElementById("guess_input").innerHTML="<input type=\"text\" id=\"myInput\" />"
     context.clearRect(0,0,canvas.width,canvas.height);
     var input = document.getElementById("myInput");
@@ -67,10 +64,10 @@ socket.on('player_chose',()=>{
             input.value="";
         }
     });
+    socket.emit('word',a);
 })
 
 function send_choice(choice){
-    console.log("hii")
     socket.emit('chosen',choice)
     canvas.addEventListener('touchstart', touchstart, false);
     canvas.addEventListener('touchmove', touchmove, false);
@@ -85,8 +82,11 @@ function send_choice(choice){
 }
 
 function passToServer(a){
+    console.log("pass")
+    console.log(timer)
     socket.emit('guess',{
         guess:a,
+        time:timer
     });
 };
 
@@ -219,3 +219,7 @@ socket.on('change_width',(siz)=>{
 socket.on('erases',()=>{
     eraser=true;
 });
+socket.on('counter',(time)=>{
+    timer=time
+    document.getElementById('timer').innerHTML=time;
+})

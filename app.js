@@ -52,50 +52,15 @@ io.on('connection', (socket) => {
     player_id=player_id+1;
     // Adding player in room
     var room;
+    var word
     socket.on('room_code', (room_no) => {
-        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room].push(id);
+        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room].push({'id':id,'score':0});console.log(room_members[room][0].id);
         socket.emit('room',{room_code:room,id:id});
         io.to(room).emit('players',room_members[room]);
-        socket.on('guess',(a)=>{    
-            if(a.guess==word){
-                io.to(room).emit('guess',{guess:a.guess,id:id,correct:true});
-            }
-            else{
-                io.to(room).emit('guess',{guess:a.guess,id:id,correct:false});
-            }
-        });
-        socket.on('mouse_up',(a)=>{
-        socket.to(room).emit('mouse_up',a);
-        });
-        socket.on('mouse_move',(a)=>{
-            socket.to(room).emit('mouse_move',a);
-        });
-        socket.on('mouse_down',(a)=>{
-            socket.to(room).emit('mouse_down',a);
-        });
-        socket.on('clears',()=>{
-            socket.to(room).emit('clears');
-        })
-        socket.on('writes',()=>{
-            socket.to(room).emit('writes');;
-        });
-        socket.on('change_color',(col)=>{
-            socket.to(room).emit('change_color',col);
-        });
-        socket.on('change_width',(siz)=>{
-            socket.to(room).emit('change_width',siz);
-        });
-        socket.on('erases',()=>{
-            socket.to(room).emit('erases');
-        });
-        socket.on('disconnect', function () {
-            room_members[room] = room_members[room].filter(function (letter) {
-                return letter !== id;
-            });
-            io.to(room).emit('players',room_members[room]);
-        });    
-        drawer_id=room_members[room][1]
-        let word
+        let drawer_id
+        if(room_members[room][1]!=null){    
+            drawer_id=room_members[room][1].id
+        }
         if(id==drawer_id){
             var word1 = words[Math.floor(Math.random()*words.length)];
             var word2 = words[Math.floor(Math.random()*words.length)];
@@ -109,12 +74,71 @@ io.on('connection', (socket) => {
             console.log(word1+word2+word3);
             socket.emit('choose',{word1:word1, word2:word2, word3:word3});
             socket.broadcast.emit('drawer',drawer_id);
+            var counter = 60;
         }
         socket.on('chosen',(choice)=>{
             word=choice;
-            console.log(choice)
-            socket.broadcast.emit('player_chose');
-        })
+            socket.broadcast.emit('player_chose',choice);
+            var timer = setInterval(()=>{
+                io.to(room).emit('counter', counter);
+                console.log(counter)
+                counter--
+                if (counter === 0) {
+                    io.to(room).emit('counter', "Congratulations You WON!!");
+                    clearInterval(timer);
+                }
+            }, 1000);
+            socket.on('mouse_up',(a)=>{
+                socket.to(room).emit('mouse_up',a);
+            });
+            socket.on('mouse_move',(a)=>{
+                socket.to(room).emit('mouse_move',a);
+            });
+            socket.on('mouse_down',(a)=>{
+                socket.to(room).emit('mouse_down',a);
+            });
+            socket.on('clears',()=>{
+                socket.to(room).emit('clears');
+            })
+            socket.on('writes',()=>{
+                socket.to(room).emit('writes');;
+            });
+            socket.on('change_color',(col)=>{
+                socket.to(room).emit('change_color',col);
+            });
+            socket.on('change_width',(siz)=>{
+                socket.to(room).emit('change_width',siz);
+            });
+            socket.on('erases',()=>{
+                socket.to(room).emit('erases');
+            });
+            socket.on('disconnect', function () {
+                room_members[room] = room_members[room].filter(function (letter) {
+                    console.log(letter.id)
+                    return letter.id !== id;
+                });
+                io.to(room).emit('players',room_members[room]);
+            });
+        })  
+        socket.on('word',(w)=>{
+            console.log(w);
+            word=w;
+            socket.on('guess',(a)=>{
+                if(a.guess==word){
+                    io.to(room).emit('guess',{guess:a.guess,id:id,correct:true});
+                    for(var i in  room_members[room]){
+                        console.log(i);
+                        if(room_members[room][i].id==id){
+                            room_members[room][i].score+a.time;
+                        }
+                    }
+                    room_members
+                }
+                else{
+                    io.to(room).emit('guess',{guess:a.guess,id:id,correct:false});
+                    room_members[room]
+                }
+        })})
 }); 
 });
 
