@@ -1,34 +1,10 @@
 // //--------------------------play-------------------------
-var input = document.getElementById("myInput");
-
 // Execute a function when the user presses a key on the keyboard
 var id;
 var drawer=false;
 
 socket.on('room',(a)=>{
     id=a.id;
-    if(id%2==0){
-        input.addEventListener("keypress", function(event) {
-            // If the user presses the "Enter" key on the keyboard
-            if (event.key === "Enter") {
-              event.preventDefault();
-              passToServer(input.value);
-              input.value="";
-            }
-        });
-        document.getElementById("drawing_tools").innerHTML=""; 
-    }
-    else{
-            canvas.addEventListener('touchstart', touchstart, false);
-            canvas.addEventListener('touchmove', touchmove, false);
-            canvas.addEventListener('touchend', touchend, false);        
-            
-            canvas.addEventListener('mousedown', drawstart, false);
-            canvas.addEventListener('mousemove', drawmove, false);
-            canvas.addEventListener('mouseup', drawend, false);
-            document.getElementById("guess_input").innerHTML="";   
-    }
-    document.getElementById("id").innerHTML="Your id is "+id
 });
 
 socket.on('players',(a)=>{
@@ -37,7 +13,6 @@ socket.on('players',(a)=>{
     console.log(a);
     for(var i in a){
         console.log(a[i]);
-        console.log(document.getElementById('players').innerHTML);
         if(a[i]==id){
             document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:750px; background-color:#81db76'>"+a[i]+"</li>"
         }
@@ -57,12 +32,58 @@ socket.on('guess',(a)=>{
     }
     if(a.correct){
         message=message+"correct word"
+        document.getElementById("guess_input").disabled = true;
     }
     else{
         message=message+a.guess
     }
     document.getElementById("guess").innerHTML=document.getElementById("guess").innerHTML+message+"<br>"
 });
+
+socket.on('drawer',(a)=>{
+    if(a!=id){
+        context.font = "30px Comic Sans MS";
+        context.fillStyle = "red";
+        context.textAlign = "center";
+        context.fillText("Player " + a + " is choosing a word...",(canvas.width / 2), (canvas.height / 2));
+    }
+    document.getElementById("id").innerHTML="Your id is "+id    
+})
+
+socket.on("choose",(a)=>{
+    console.log('recieved');
+    document.getElementById('choose').innerHTML="<button onclick=\"send_choice(\'"+String(a.word1)+"\')\">"+String(a.word1)+"</button>"+'\n'+"<button onclick=\"send_choice(\'"+String(a.word2)+"\')\">"+String(a.word2)+"</button>"+'\n'+"<button onclick=\"send_choice(\'"+String(a.word3)+"\')\">"+String(a.word3)+"</button>"
+});
+
+socket.on('player_chose',()=>{
+    document.getElementById("guess_input").innerHTML="<input type=\"text\" id=\"myInput\" />"
+    context.clearRect(0,0,canvas.width,canvas.height);
+    var input = document.getElementById("myInput");
+    input.addEventListener("keypress", function(event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            event.preventDefault();
+            passToServer(input.value);
+            input.value="";
+        }
+    });
+})
+
+function send_choice(choice){
+    console.log("hii")
+    socket.emit('chosen',choice)
+    canvas.addEventListener('touchstart', touchstart, false);
+    canvas.addEventListener('touchmove', touchmove, false);
+    canvas.addEventListener('touchend', touchend, false);        
+    
+    canvas.addEventListener('mousedown', drawstart, false);
+    canvas.addEventListener('mousemove', drawmove, false);
+    canvas.addEventListener('mouseup', drawend, false);
+
+    document.getElementById("drawing_tools").innerHTML=" <button id=\"trash\" onclick=\"clears()\">🗑️</button>"+'\n'+"<button id=\"pencil\" onclick=\"writes()\">✏️</button>"+'\n'+"<button><img width=\"10\" height=\"20\" src=\"./resources/eraser.png\" alt=\"eraser\" id=\"eraser\" onclick=\"erases()\"/></button> "+'\n'+"<button style=\"background-color: red; width: 30px; height: 30px\" onclick=\"change_color('red')\" ></button>"+'\n'+"<button style=\"background-color: blue; width: 30px; height: 30px\" onclick=\"change_color('blue')\"></button>"+'\n'+"<button style=\"background-color: green; width: 30px; height: 30px\" onclick=\"change_color('green')\"></button>"+'\n'+"<button style=\"background-color: white; width: 30px; height: 30px\" onclick=\"change_color('white')\"></button>"+'\n'+"<button   style=\"background-color: yellow; width: 30px; height: 30px\" onclick=\"change_color('yellow')\"></button>"+'\n'+"<button style=\"background-color: orange; width: 30px; height: 30px\" onclick=\"change_color('orange')\"></button>"+'\n'+"<button style=\"background-color: black; width: 30px; height: 30px\" onclick=\"change_color('black')\"></button>"+'\n'+"<button style=\"background-color: pink; width: 30px; height: 30px\" onclick=\"change_color('pink')\"></button>"+'\n'+"<button style=\"background-color: brown; width: 30px; height: 30px\" onclick=\"change_color('brown')\" ></button>";
+    document.getElementById("choose").innerHTML=""
+}
+
 function passToServer(a){
     socket.emit('guess',{
         guess:a,

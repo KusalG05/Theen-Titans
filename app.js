@@ -44,8 +44,8 @@ app.post('/join',(req, res)=>{
 });
 //--------------------------------setting up socket connection----------------------------------
 player_id=0
-word='fish';
 room_members={1234:[],2345:[],4567:[],3456:[],5678:[]}
+words=['fish','sun','cat','dog','cloud','boob','dick','ass','pussy','stepbro','horny','sexy','milf','squirt','cum'];
 io.on('connection', (socket) => {
     console.log('connection');
     const id=player_id;
@@ -53,8 +53,8 @@ io.on('connection', (socket) => {
     // Adding player in room
     var room;
     socket.on('room_code', (room_no) => {
-        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room].push(player_id);
-        socket.emit('room',{room_code:room,id:player_id});
+        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room].push(id);
+        socket.emit('room',{room_code:room,id:id});
         io.to(room).emit('players',room_members[room]);
         socket.on('guess',(a)=>{    
             if(a.guess==word){
@@ -93,6 +93,28 @@ io.on('connection', (socket) => {
                 return letter !== id;
             });
             io.to(room).emit('players',room_members[room]);
-        });   
+        });    
+        drawer_id=room_members[room][1]
+        let word
+        if(id==drawer_id){
+            var word1 = words[Math.floor(Math.random()*words.length)];
+            var word2 = words[Math.floor(Math.random()*words.length)];
+            while(word2==word1){
+                word2 = words[Math.floor(Math.random()*words.length)];
+            }
+            var word3 = words[Math.floor(Math.random()*words.length)];
+            while(word1==word3 || word2==word3){
+                word3 = words[Math.floor(Math.random()*words.length)];
+            }
+            console.log(word1+word2+word3);
+            socket.emit('choose',{word1:word1, word2:word2, word3:word3});
+            socket.broadcast.emit('drawer',drawer_id);
+        }
+        socket.on('chosen',(choice)=>{
+            word=choice;
+            console.log(choice)
+            socket.broadcast.emit('player_chose');
+        })
 }); 
 });
+
