@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 //This is for mentioning apply css to the html for all css files inside the path given in the argument which in this case is the same directory(__dirname)
 app.use(express.static(__dirname));
 app.use(express.static(__dirname+"/Profile"));
-//app.use(express.static(__dirname+"/game/resources"));
 
 
 //---------------------------------play----------------------------------------
@@ -100,7 +99,7 @@ io.on('connection', (socket) => {
                 console.log(counter)
                 counter--
                 if (counter === 0) {
-                    io.to(room).emit('restart',room_members);
+                    io.to(room).emit('restart',0)
                     clearInterval(timer);
                 }
             }, 1000);
