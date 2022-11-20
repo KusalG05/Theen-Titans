@@ -53,6 +53,8 @@ app.post('/create_room',(req,res)=>{
     console.log(rooms)
     res.redirect('game/'+room_code)
 })
+app.get('/login',(req,res)=>{
+    res.sendFile(__dirname+'/login.html')})
 //--------------------------------setting up socket connection----------------------------------
 player_id=0
 room_members={1234:[],2345:[],4567:[],3456:[],5678:[]}
