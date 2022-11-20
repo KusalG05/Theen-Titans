@@ -93,14 +93,15 @@
               margin-top: -40px;
             "
           >
-            <button
-              type="button"
-              class="btn btn-primary"
-              onclick="open1()"
-              style="margin-left: 30px; margin-right: 15px"
-            >
-              Create Room
-            </button>
+            <form action="/create_room" method="post">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                style="margin-left: 30px; margin-right: 15px"
+              >
+                Create Room
+              </button>
+            </form>
             <div class="lobby" id="lobby">
               <h2 id="room_code">Your room Code is:</h2>
               <h3>Waiting for player to join...</h3>

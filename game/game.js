@@ -11,10 +11,10 @@ socket.on('players',(a)=>{
     document.getElementById('players').innerHTML=""
     for(var i in a){
         if(a[i].id==id){
-            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:750px; background-color:#81db76'>"+a[i].id+"</li>"
+            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+a[i].id+"</li>"
         }
         else{
-            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:750px'>"+a[i].id+"</li>"
+            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%'>"+a[i].id+"</li>"
         }
     }
 })
@@ -60,7 +60,7 @@ socket.on("choose",(a)=>{
 });
 
 socket.on('player_chose',(a)=>{
-    document.getElementById("guess_input").innerHTML="<input type=\"text\" id=\"myInput\" />"
+    document.getElementById("guess_input").innerHTML="<input type=\"text\" id=\"myInput\" style=\"width:100%; height:50px; border:2px solid black; border-radius: 10px;\"/>"
     context.clearRect(0,0,canvas.width,canvas.height);
     var input = document.getElementById("myInput");
     input.addEventListener("keypress", function(event) {
@@ -105,7 +105,8 @@ function passToServer(a){
 
 var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
-
+var heightRatio = 0.5;
+canvas.height = canvas.width * heightRatio;
 var eraser=false;
 
 var draw = false;

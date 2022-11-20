@@ -1,14 +1,3 @@
-
-function open1(){
-    var open2=document.getElementById("lobby");
-    let id;
-    socket.on('room',(a)=>{
-        document.getElementById("room_code").innerHTML=document.getElementById("room_code").innerHTML+a.room_code;
-        id=a.id;
-    })
-    open2.classList.add("lobby_present");  
-}
-
 function opened2(){
     var open2=document.getElementById("join");
     let id;

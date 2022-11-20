@@ -36,12 +36,23 @@ app.get('/game/:room_code',(req, res)=>{
     res.render(__dirname+'/game/game.ejs',{ room_code:req.params.room_code });
 });
 
+rooms=[1234,2345,3456,4567,5678];
 app.post('/join',(req, res)=>{
-    rooms=[1234,2345,3456,4567,5678];
     if(rooms.includes(parseInt(req.body.room_code))){
         res.redirect('game/'+req.body.room_code)
     }
 });
+app.post('/create_room',(req,res)=>{
+    let room_code=Math.floor(Math.random()*9000+999);
+    while(rooms.includes(room_code)){
+        room_code=Math.floor(Math.random()*9000+999);
+    }
+    rooms.push(room_code);
+    room_members[room_code]=[]
+    console.log(room_members)
+    console.log(rooms)
+    res.redirect('game/'+room_code)
+})
 //--------------------------------setting up socket connection----------------------------------
 player_id=0
 room_members={1234:[],2345:[],4567:[],3456:[],5678:[]}
