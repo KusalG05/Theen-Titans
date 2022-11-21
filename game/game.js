@@ -21,7 +21,7 @@ socket.on('start_game', ()=>{
     document.getElementById('game').style.display='block';
 })
 socket.on('players',(a)=>{
-    lobby=document.getElementById('lobby')
+    lobby=document.getElementById('players')
     lobby.innerHTML=""
     // for(var i in a){
     //     if(a[i].id==id){

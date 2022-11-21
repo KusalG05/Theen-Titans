@@ -76,6 +76,7 @@ io.on('connection', (socket) => {
         io.to(room).emit('players',room_members[room]);
         let decider_id
         let drawer_id
+        var round=0
         socket.on('start_game',()=>{
             decider_id=id
             socket.broadcast.emit('start_game');
@@ -107,7 +108,12 @@ io.on('connection', (socket) => {
             }
         })
         socket.on('start',()=>{
+            console.log("round "+round)
             console.log('hi');
+            if(round==5){
+                return
+            }
+            round++;
             if(id==decider_id){
                 drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
                 io.to(room).emit('drawer',drawer_id);
