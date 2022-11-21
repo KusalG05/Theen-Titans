@@ -7,6 +7,7 @@ const io = new Server(server);
 const bodyParser=require('body-parser');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
+var url=require('url')
 //----------------------------starting server-----------------------------------------------------------
 
 //This is for mentioning apply css to the html for all css files inside the path given in the argument which in this case is the same directory(__dirname)
@@ -33,13 +34,14 @@ server.listen(3000, () => {
 });
 
 app.get('/game/:room_code',(req, res)=>{
-    res.render(__dirname+'/game/game.ejs',{ room_code:req.params.room_code });
-});
+    console.log(req.query)
+    res.render(__dirname+'/game/game.ejs',{ room_code:req.params.room_code,starter:req.query.starter }); });
 
 rooms=[1234,2345,3456,4567,5678];
 app.post('/join',(req, res)=>{
+    //var starter=encodeURIComponent(false)
     if(rooms.includes(parseInt(req.body.room_code))){
-        res.redirect('game/'+req.body.room_code)
+        res.redirect(url.format({pathname:'game/'+req.body.room_code, query:{'starter':false}}))
     }
 });
 app.post('/create_room',(req,res)=>{
@@ -51,7 +53,9 @@ app.post('/create_room',(req,res)=>{
     room_members[room_code]=[]
     console.log(room_members)
     console.log(rooms)
-    res.redirect('game/'+room_code)
+    //var starter=encodeURIComponent(true)
+    //res.redirect('game/'+room_code+'/?starter='+starter)
+    res.redirect(url.format({pathname:'game/'+room_code, query:{'starter':true}}))
 })
 app.get('/login',(req,res)=>{
     res.sendFile(__dirname+'/login.html')})
@@ -67,18 +71,24 @@ io.on('connection', (socket) => {
     var room;
     var word
     socket.on('room_code', (room_no) => {
-        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room].push({'id':id,'score':0});
+        room=parseInt(room_no);console.log(room);socket.join(room); room_members[room_no].push({'id':id,'score':0});
         socket.emit('room',{room_code:room,id:id});
         io.to(room).emit('players',room_members[room]);
         let decider_id
         let drawer_id
-        if(room_members[room][1]!=null){    
-            decider_id=room_members[room][1].id
-        }
-        if(id==decider_id){
+        socket.on('start_game',()=>{
+            decider_id=id
+            socket.broadcast.emit('start_game');
             drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
             io.to(room).emit('drawer',drawer_id);
-        }
+        })
+        // if(room_members[room][1]!=null){    
+        //     decider_id=room_members[room][1].id
+        // }
+        // if(id==decider_id){
+        //     drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
+        //     io.to(room).emit('drawer',drawer_id);
+        // }
         socket.on('whose_drawer',(a)=>{
             drawer_id=a;
             if(id==drawer_id){

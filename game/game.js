@@ -7,14 +7,36 @@ socket.on('room',(a)=>{
     id=a.id;
 });
 
+function start_game(){console .log('hi')
+    document.getElementById('lobby').style.display='none';
+    document.getElementById('game').style.display='block';
+    //document.getElementById('body').innerHTML=
+    //    "<div class=\"header\"> <img src=\"./resources/img_avatar.png\" alt=\"Avatar\" id=\"profile-img\" />  <h1 style=\"text-align: center;font-family: cursive;background-color: 2px solid black;\">Your room no is 1234 Enjoy!!</h1><button class=\"btn btn-danger logout-btn\">LogOut/Exit</button></div><div class=\"time_count\"><div style=\"text-align: center;background-color: rgb(235, 190, 108);border-top-left-radius: 10px;border-top-right-radius: 10px;border-bottom: 2px solid black;\">Time Remaining</div><div id=\"timer\" style=\"text-align: center\">30</div></div>        <div class=\"choose_box\">          <div style=\"text-align: center;             background-color: rgb(235, 190, 108);              border-top-left-radius: 10px;              border-top-right-radius: 10px;              border-bottom: 2px solid black;            \"    >  Artist now      </div>          <div id=\"choose\" style=\"text-align: center\">Saketh is drawing..</div>        </div>        <div id=\"drawarea\">          <div class=\"row\">           <div class=\"col-8 col-s-8\"><canvas id=\"myCanvas\"       height=\"500px\"                width=\"1000px\"                style=\"border: 8px solid #000000\"              ></canvas>              <div id=\"drawing_tools\">              </div>            </div>            <div id=\"chat_box\" class=\"col-4 col-s-4\">  </div> </div></div>"      
+    socket.emit('start_game')
+
+}
+
+socket.on('start_game', ()=>{
+    document.getElementById('lobby').style.display='none';
+    document.getElementById('game').style.display='block';
+})
 socket.on('players',(a)=>{
-    document.getElementById('players').innerHTML=""
+    lobby=document.getElementById('lobby')
+    lobby.innerHTML=""
+    // for(var i in a){
+    //     if(a[i].id==id){
+    //         document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+a[i].id+"</li>"
+    //     }
+    //     else{
+    //         document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%'>"+a[i].id+"</li>"
+    //     }
+    // }
     for(var i in a){
         if(a[i].id==id){
-            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+a[i].id+"</li>"
+           lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start\"> <div>👤 <h3 class=\"fw-bold mb-0 fs-4\" style=\"background-color: grey\">Player"+a[i].id+"</h3> </div> </div>"
         }
         else{
-            document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%'>"+a[i].id+"</li>"
+            lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start\"> <div>👤 <h3 class=\"fw-bold mb-0 fs-4\">Player"+a[i].id+"</h3> </div> </div>"
         }
     }
 })
