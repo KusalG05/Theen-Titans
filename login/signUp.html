@@ -13,18 +13,15 @@
       <h1>Portal for SignUp</h1>
     </header>
     <main>
-      <form
-        id="login_form"
-        class="form_class"
-        action="login/login-access.php"
-        method="post"
-      >
+      <div class="form_class">
         <div class="form_div">
+          <form>
           <label>Email:</label>
-          <input
+          <input=
             class="field_class"
             name="login_txt"
             type="email"
+            id="email"
             placeholder="example@example.com"
             autocomplete="username email"
             autofocus
@@ -35,6 +32,7 @@
             class="field_class"
             name="password_txt"
             type="password"
+            id="password"
             placeholder="Password"
             autocomplete="new-password"
           />
@@ -59,10 +57,11 @@
         <div class="info_div">
           <p>
             Already registered?
-            <a href="./login.html">Login Now</a>
+            <button onclick="signIn2()">Login Now</button>
           </p>
+        </form>
         </div>
-      </form>
+      </div>
     </main>
     <footer>
       <p>Artwist welcomes you</p>
@@ -72,5 +71,5 @@
 
   <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
 
-  <script src="form.js"></script>
+  <script type="text/javascript" src="./form.js"></script>
 </html>

@@ -24,4 +24,14 @@
 
 /* Add Responsiveness of cards */
 
-
+.header{
+    background-image: linear-gradient(to right, purple,white, purple);
+    color: black;
+    padding: 5px;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    height: 10vh;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
