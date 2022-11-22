@@ -16,21 +16,37 @@ function start_game(){console .log('hi')
 
 }
 
+socket.on('over',(a)=>{
+    console.log(a)
+    document.getElementById('lobby').style.display='block';
+    document.getElementById('game').style.display='none';
+    var sorted_scores=a.sort((a,b)=>{return -a.score+b.score})
+    console.log(sorted_scores);
+    final_scores=document.getElementById('final_scores')
+    final_scores.innerHTML="The winner is "+sorted_scores[0].id
+    for(var i in sorted_scores){
+    final_scores.innerHTML = final_scores.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+sorted_scores[i].id+"   -    "+sorted_scores[i].score+"</li>"
+    }
+    document.getElementById("startgame").innerHTML='Play Again'
+})
+
 socket.on('start_game', ()=>{
     document.getElementById('lobby').style.display='none';
     document.getElementById('game').style.display='block';
 })
 socket.on('players',(a)=>{
     lobby=document.getElementById('players')
+    game_players=document.getElementById('game_players')
     lobby.innerHTML=""
-    // for(var i in a){
-    //     if(a[i].id==id){
-    //         document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+a[i].id+"</li>"
-    //     }
-    //     else{
-    //         document.getElementById('players').innerHTML=document.getElementById('players').innerHTML+"<li class='list-group-item' style='width:100%'>"+a[i].id+"</li>"
-    //     }
-    // }
+    game_players.innerHTML=""
+    for(var i in a){
+        if(a[i].id==id){
+            game_players.innerHTML=game_players.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+a[i].id+"   -    "+a[i].score+"</li>"
+        }
+        else{
+            game_players.innerHTML=game_players.innerHTML+"<li class='list-group-item' style='width:100%'>"+a[i].id+"   -    "+a[i].score+"</li>"
+        }
+    }
     for(var i in a){
         if(a[i].id==id){
            lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start\"> <div>👤 <h3 class=\"fw-bold mb-0 fs-4\" style=\"background-color: grey\">Player"+a[i].id+"</h3> </div> </div>"

@@ -35,49 +35,10 @@
       <div
         class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5"
         id="players"
-      >
-        <div
-          class="col d-flex align-items-start"
-          style="background-color: grey"
-        >
-          <div>
-            👤
-            <h3 class="fw-bold mb-0 fs-4">Player 1</h3>
-          </div>
-        </div>
-        <div class="col d-flex align-items-start">
-          <div>
-            👤
-            <h3 class="fw-bold mb-0 fs-4">Player 2</h3>
-          </div>
-        </div>
-        <div class="col d-flex align-items-start">
-          <div>
-            👤
-            <h3 class="fw-bold mb-0 fs-4">Player 3</h3>
-          </div>
-        </div>
-        <div class="col d-flex align-items-start">
-          <div>
-            👤
-            <h3 class="fw-bold mb-0 fs-4">Player 4</h3>
-          </div>
-        </div>
-        <div class="col d-flex align-items-start">
-          <div>
-            👤
-            <h3 class="fw-bold mb-0 fs-4">Player 5</h3>
-          </div>
-        </div>
-        <div class="col d-flex align-items-start">
-          <div>
-            👤
-            <h3 class="fw-bold mb-0 fs-4">Player 6</h3>
-          </div>
-        </div>
-      </div>
+      ></div>
+      <div class="col-3" id="final_scores"></div>
       <% if(starter==='true'){ %>
-      <button onclick="start_game()">Start Game</button>
+      <button onclick="start_game()" id="startgame">Start Game</button>
       <% } %>
     </div>
     <div id="game" style="display: none">
@@ -112,7 +73,10 @@
       <!-- Change width and height of canvas for working of canvas.. ask saketh https://stackoverflow.com/questions/33191909/can-i-specify-canvas-dimensions-using-vh-and-vw -->
       <div id="drawarea">
         <div class="row">
-          <div class="col-8 col-s-8">
+          <div class="col-2 col-s-2">
+            <div id="game_players"></div>
+          </div>
+          <div class="col-4 col-s-6">
             <canvas
               id="myCanvas"
               height="500px"

@@ -39,7 +39,6 @@ app.get('/game/:room_code',(req, res)=>{
 
 rooms=[1234,2345,3456,4567,5678];
 app.post('/join',(req, res)=>{
-    //var starter=encodeURIComponent(false)
     if(rooms.includes(parseInt(req.body.room_code))){
         res.redirect(url.format({pathname:'game/'+req.body.room_code, query:{'starter':false}}))
     }
@@ -53,16 +52,16 @@ app.post('/create_room',(req,res)=>{
     room_members[room_code]=[]
     console.log(room_members)
     console.log(rooms)
-    //var starter=encodeURIComponent(true)
-    //res.redirect('game/'+room_code+'/?starter='+starter)
     res.redirect(url.format({pathname:'game/'+room_code, query:{'starter':true}}))
 })
 app.get('/login',(req,res)=>{
-    res.sendFile(__dirname+'/login.html')})
+    res.sendFile(__dirname+'/login/login.html')})
+app.get('/signUp',(req,res)=>{
+    res.sendFile(__dirname+'/login/signUp.html')})
 //--------------------------------setting up socket connection----------------------------------
 player_id=0
 room_members={1234:[],2345:[],4567:[],3456:[],5678:[]}
-words=['fish','sun','cat','dog','cloud','boob','dick','ass','pussy','stepbro','horny','sexy','milf','squirt','cum'];
+words=['boob','dick','ass','pussy','stepbro','horny','sexy','milf','squirt','cum'];
 io.on('connection', (socket) => {
     console.log('connection');
     const id=player_id;
@@ -83,13 +82,6 @@ io.on('connection', (socket) => {
             drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
             io.to(room).emit('drawer',drawer_id);
         })
-        // if(room_members[room][1]!=null){    
-        //     decider_id=room_members[room][1].id
-        // }
-        // if(id==decider_id){
-        //     drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
-        //     io.to(room).emit('drawer',drawer_id);
-        // }
         socket.on('whose_drawer',(a)=>{
             drawer_id=a;
             if(id==drawer_id){
@@ -108,9 +100,8 @@ io.on('connection', (socket) => {
             }
         })
         socket.on('start',()=>{
-            console.log("round "+round)
-            console.log('hi');
-            if(round==5){
+            if(round==2){
+                io.to(room).emit('over',room_members[room]);
                 return
             }
             round++;
@@ -118,6 +109,8 @@ io.on('connection', (socket) => {
                 drawer_id = room_members[room][Math.floor(Math.random()*room_members[room].length)].id;
                 io.to(room).emit('drawer',drawer_id);
             }
+            console.log(room_members[room_no])
+            io.to(room).emit('players',room_members[room_no])
         })
         socket.on('chosen',(choice)=>{
             word=choice;
@@ -165,15 +158,16 @@ io.on('connection', (socket) => {
             });
         })  
         socket.on('word',(w)=>{
-            console.log(w);
             word=w;
             socket.on('guess',(a)=>{
                 if(a.guess==word){
+                    console.log('hoo');
                     io.to(room).emit('guess',{guess:a.guess,id:id,correct:true});
                     for(var i in  room_members[room]){
                         console.log(i);
                         if(room_members[room][i].id==id){
-                            room_members[room][i].score+a.time;
+                            console.log('hi stepbro')
+                            room_members[room][i].score=room_members[room][i].score+a.time;
                         }
                     }
                 }

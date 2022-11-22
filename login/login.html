@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../logo.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="./loginStyles.css" />
+    <title>Login- Artwist</title>
+  </head>
+
+  <!-- <body>
+    <div class="formContainer">
+      <h1>Enter Credentials Here:</h1>
+      <input type="email" placeholder="email here" id="email" />
+      <br />
+      <input type="password" placeholder="password here" id="password" />
+      <br />
+      <button onclick="signIn()" id="signIn">SignIn</button>
+      <a href="./signUp.html">
+        <button>SignUp</button>
+      </a>
+      <button onclick="signOut()" id="signOut">SignOut</button>
+    </div>
+  </body> -->
+  <body>
+    <header>
+      <h1>Portal for Login</h1>
+    </header>
+    <main>
+      <form
+        id="login_form"
+        class="form_class"
+        action="login/login-access.php"
+        method="post"
+      >
+        <div class="form_div">
+          <label>Email:</label>
+          <input
+            class="field_class"
+            name="login_txt"
+            type="email"
+            placeholder="example@example.com"
+            autofocus
+          />
+          <label>Password:</label>
+          <input
+            id="pass"
+            class="field_class"
+            name="password_txt"
+            type="password"
+            placeholder="Password"
+          />
+          <button
+            class="submit_class"
+            id="signUp"
+            type="submit"
+            form="login_form"
+            onclick="signIn()"
+          >
+            Sign In
+          </button>
+        </div>
+        <div class="info_div">
+          <p>
+            Not registered yet?
+            <a href="./signUp.html">Sign Up</a>
+          </p>
+        </div>
+      </form>
+    </main>
+    <footer>
+      <p>Artwist welcomes you</p>
+    </footer>
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+  <script src="form.js"></script>
+</html>
