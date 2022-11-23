@@ -5,7 +5,6 @@ var heightRatio = 0.5;
 canvas.height = canvas.width * heightRatio;
 var eraser=false;
 var draw = false; 
-var guesses=0;
 //initializing id
 var id;
 socket.on('room',(a)=>{
@@ -40,14 +39,12 @@ socket.on('players',(a)=>{
 function start_game(){ //for starting player
     document.getElementById('lobby').style.display='none';
     document.getElementById('game').style.display='block';
-    start=true;
     socket.emit('start_game')
 }
 
 socket.on('start_game', ()=>{// for other player
     document.getElementById('lobby').style.display='none';
     document.getElementById('game').style.display='block';
-    start=true;
 })
 
 //information about the drawer is sent and let its socket know
@@ -190,7 +187,6 @@ function passToServer(a){
     socket.emit('guess',{
         guess:a,
         time:timer,
-        guesses:guesses
     });
 };
 
@@ -200,10 +196,9 @@ socket.on('guess',(a)=>{
     if(a.id==id){
         message=message+"you guessed "
         if(a.correct){
-            guesses+1
-            console.log(guesses)
             message=message+"correct word"
             document.getElementById("myInput").disabled = true;
+            socket.emit("correct_guess")
         }
         else{
             message=message+a.guess
@@ -212,8 +207,8 @@ socket.on('guess',(a)=>{
     else{
         message=message+"player "+a.id+" guessed "
         if(a.correct){
-            guesses+1
             message=message+"correct word"
+            socket.emit("correct_guess")
         }
         else{
             message=message+a.guess
