@@ -5,6 +5,7 @@ var heightRatio = 0.5;
 canvas.height = canvas.width * heightRatio;
 var eraser=false;
 var draw = false; 
+var guesses=0;
 //initializing id
 var id;
 socket.on('room',(a)=>{
@@ -39,12 +40,14 @@ socket.on('players',(a)=>{
 function start_game(){ //for starting player
     document.getElementById('lobby').style.display='none';
     document.getElementById('game').style.display='block';
+    start=true;
     socket.emit('start_game')
 }
 
 socket.on('start_game', ()=>{// for other player
     document.getElementById('lobby').style.display='none';
     document.getElementById('game').style.display='block';
+    start=true;
 })
 
 //information about the drawer is sent and let its socket know
@@ -73,6 +76,7 @@ socket.on("choose",(a)=>{
 
 //once the choice is chosen the round starts and the drawign tools are visible
 function send_choice(choice){
+    document.getElementById('guess_input').innerHTML=""
     socket.emit('chosen',choice)
     canvas.addEventListener('touchstart', touchstart, false);
     canvas.addEventListener('touchmove', touchmove, false);
@@ -171,6 +175,7 @@ socket.on('player_chose',(a)=>{
     document.getElementById("guess_input").innerHTML="<input type=\"text\" id=\"myInput\" style=\"width:100%; height:50px; border:2px solid black; border-radius: 10px;\"/>"
     context.clearRect(0,0,canvas.width,canvas.height);
     var input = document.getElementById("myInput");
+    input.disabled=false;
     input.addEventListener("keypress", function(event) {
         // If the user presses the "Enter" key on the keyboard
         if (event.key === "Enter") {
@@ -187,6 +192,7 @@ function passToServer(a){
     socket.emit('guess',{
         guess:a,
         time:timer,
+        guesses:guesses
     });
 };
 
@@ -196,9 +202,10 @@ socket.on('guess',(a)=>{
     if(a.id==id){
         message=message+"you guessed "
         if(a.correct){
+            guesses+1
+            console.log(guesses)
             message=message+"correct word"
             document.getElementById("myInput").disabled = true;
-            socket.emit("correct_guess")
         }
         else{
             message=message+a.guess
@@ -207,8 +214,8 @@ socket.on('guess',(a)=>{
     else{
         message=message+"player "+a.id+" guessed "
         if(a.correct){
+            guesses+1
             message=message+"correct word"
-            socket.emit("correct_guess")
         }
         else{
             message=message+a.guess
@@ -274,6 +281,20 @@ socket.on('counter',(time)=>{
 //-----------------------------------game restart/over--------------------------------
 socket.on('restart',()=>{
     socket.emit('start')
+    context.clearRect(0,0,canvas.width,canvas.height);
+    if(document.getElementById('myInput')!=null){
+        document.getElementById('guess_input').innerHTML="";
+    }
+    else{
+        document.getElementById('drawing_tools').innerHTML=""
+        canvas.removeEventListener('touchstart', touchstart, false);
+        canvas.removeEventListener('touchmove', touchmove, false);
+        canvas.removeEventListener('touchend', touchend, false);    
+
+        canvas.removeEventListener('mousedown', drawstart, false);
+        canvas.removeEventListener('mousemove', drawmove, false);
+        canvas.removeEventListener('mouseup', drawend, false);
+    }
 })
 
 socket.on('over',(a)=>{

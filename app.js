@@ -120,7 +120,6 @@ io.on('connection', (socket) => {
         let drawer_id
         let drawer_index
         let initial_index
-        let guesses
         //once play game is pressed
         socket.on('start_game',()=>{
             socket.broadcast.emit('start_game'); //let other players know game is started
@@ -134,7 +133,6 @@ io.on('connection', (socket) => {
         })
         //other players know the drawer and the drawer server sends three random words to the drawer client
         socket.on('who_is_drawer',(a)=>{
-            guesses=0
             drawer_id=a;
             //-------------------------drawer --------------------
             if(id==drawer_id){
@@ -152,7 +150,7 @@ io.on('connection', (socket) => {
         })
         
         //after choosing they send their choice to the drawer server
-        socket.on('chosen',(choice)=>{ 
+        socket.on('chosen',(choice)=>{
             word=choice;
             socket.to(room).emit('player_chose',choice); //the choice is sent to other clients
             //game starts and the timer starts
@@ -204,12 +202,12 @@ io.on('connection', (socket) => {
         //---------------------------------------guesser--------------------------------------------
         //guesser sends the guess
         socket.on('word',(w)=>{
-            guesses=0
             word=w;
             socket.on('guess',(a)=>{
                 if(a.guess==word){
-                    if(guesses==room_members[room].length-1){
-                        io.to(room).emit('restart',0)                 
+                    console.log(a.guesses)
+                    if(a.guesses==room_members[room].length-1){
+                        io.to(room).emit('restart',0) 
                     }
                     io.to(room).emit('guess',{guess:a.guess,id:id,correct:true});
                     for(var i in  room_members[room]){
@@ -221,13 +219,7 @@ io.on('connection', (socket) => {
                 else{
                     io.to(room).emit('guess',{guess:a.guess,id:id,correct:false});
                 }
-            }
-            )
-            socket.on('correct_guess',()=>{
-                guesses++;
-                console.log(guesses)
-            })
-    })
+        })})
 
         //--------------------------------restart-------------------------------
         socket.on('start',()=>{
@@ -241,9 +233,8 @@ io.on('connection', (socket) => {
                 }
                 drawer_id = room_members[room][drawer_index].id;
                 io.to(room).emit('drawer',drawer_id);
-                io.to(room).emit('players',room_members[room_no])
+                io.to(room).emit('players',room_members[room_no]);
             }
         });
     }); 
 });
-

@@ -34,25 +34,6 @@ function joinroom(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 var opens2=document.getElementById("lobby");
 function open1(){
     open2.classList.add("lobby_present");  
