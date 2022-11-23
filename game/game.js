@@ -86,7 +86,7 @@ function send_choice(choice){
     canvas.addEventListener('mousemove', drawmove, false);
     canvas.addEventListener('mouseup', drawend, false);
 
-    document.getElementById("drawing_tools").innerHTML=" <button id=\"trash\" onclick=\"clears()\">🗑️</button>"+'\n'+"<button id=\"pencil\" onclick=\"writes()\">✏️</button>"+'\n'+"<button><img width=\"10\" height=\"20\" src=\"./resources/eraser.png\" alt=\"eraser\" id=\"eraser\" onclick=\"erases()\"/></button> "+'\n'+"<button style=\"background-color: red; width: 30px; height: 30px\" onclick=\"change_color('red')\" ></button>"+'\n'+"<button style=\"background-color: blue; width: 30px; height: 30px\" onclick=\"change_color('blue')\"></button>"+'\n'+"<button style=\"background-color: green; width: 30px; height: 30px\" onclick=\"change_color('green')\"></button>"+'\n'+"<button style=\"background-color: white; width: 30px; height: 30px\" onclick=\"change_color('white')\"></button>"+'\n'+"<button   style=\"background-color: yellow; width: 30px; height: 30px\" onclick=\"change_color('yellow')\"></button>"+'\n'+"<button style=\"background-color: orange; width: 30px; height: 30px\" onclick=\"change_color('orange')\"></button>"+'\n'+"<button style=\"background-color: black; width: 30px; height: 30px\" onclick=\"change_color('black')\"></button>"+'\n'+"<button style=\"background-color: pink; width: 30px; height: 30px\" onclick=\"change_color('pink')\"></button>"+'\n'+"<button style=\"background-color: brown; width: 30px; height: 30px\" onclick=\"change_color('brown')\" ></button>";
+    document.getElementById("drawing_tools").innerHTML=" <button id=\"trash\" onclick=\"clears()\">🗑️</button>"+'\n'+"<button id=\"pencil\" onclick=\"writes()\">✏️</button>"+'\n'+"<button><img width=\"10\" height=\"20\" src=\"./resources/eraser.png\" alt=\"eraser\" id=\"eraser\" onclick=\"erases()\"/></button> "+'\n'+"<button style=\"background-color: red; width: 30px; height: 30px\" onclick=\"change_color('red')\" ></button>"+'\n'+"<button style=\"background-color: blue; width: 30px; height: 30px\" onclick=\"change_color('blue')\"></button>"+'\n'+"<button style=\"background-color: green; width: 30px; height: 30px\" onclick=\"change_color('green')\"></button>"+'\n'+"<button style=\"background-color: white; width: 30px; height: 30px\" onclick=\"change_color('white')\"></button>"+'\n'+"<button   style=\"background-color: yellow; width: 30px; height: 30px\" onclick=\"change_color('yellow')\"></button>"+'\n'+"<button style=\"background-color: orange; width: 30px; height: 30px\" onclick=\"change_color('orange')\"></button>"+'\n'+"<button style=\"background-color: black; width: 30px; height: 30px\" onclick=\"change_color('black')\"></button>"+'\n'+"<button style=\"background-color: pink; width: 30px; height: 30px\" onclick=\"change_color('pink')\"></button>"+'\n'+"<button style=\"background-color: brown; width: 30px; height: 30px\" onclick=\"change_color('brown')\" ></button>"+"<button style=\"font-size: 100px;border-color: white;background-color: white;box-shadow: 0 0 white;\" onclick=\"change_width(1)\">.</button><button style=\"font-size: 700px;border-color: white;background-color: white;box-shadow: 0 0 white;\" onclick=\"change_width(11)\">.</button><button style=\"font-size: 1000px;border-color: white;background-color: white;box-shadow: 0 0 white;\"onclick=\"change_width(30)\">.</button>";
     document.getElementById("choose").innerHTML=""
     context.clearRect(0,0,canvas.width,canvas.height);
 }
@@ -102,6 +102,7 @@ function writes(){
 
 function change_color(col){
     eraser=false;
+    context.lineWidth=1;    
     context.strokeStyle=col;
     socket.emit('change_color',col);
 }
@@ -307,4 +308,9 @@ socket.on('over',(a)=>{
         final_scores.innerHTML = final_scores.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+sorted_scores[i].id+"   -    "+sorted_scores[i].score+"</li>"
     }
     document.getElementById("startgame").innerHTML='Play Again'
+})
+
+//------------------------------------------------------------------------------------------------
+socket.on('not found',()=>{
+    document.getElementsByClassName("header")[0].innerHTML="<h1 >Room Not Found</h1>"
 })

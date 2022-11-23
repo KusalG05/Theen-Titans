@@ -38,12 +38,12 @@ app.get('/account', (req, res) => {
 
 //login page route
 app.get('/login',(req,res)=>{
-    res.sendFile(__dirname+'/login/login.html')
+    res.sendFile(__dirname+'/login/login.html');
 })
 
 //signup page route
 app.get('/signUp',(req,res)=>{
-    res.sendFile(__dirname+'/login/signUp.html')
+    res.sendFile(__dirname+'/login/signUp.html');
 })
 
 //--------------------------------game room------------------------------------------
@@ -65,13 +65,11 @@ app.post('/create_room',(req,res)=>{
 
     //redirecting to the game room with room code params and room creater parameter as true
     res.redirect(url.format({pathname:'game/'+room_code, query:{'creator':true}}))
-})
+});
 
 //Joining game room
 app.post('/join',(req, res)=>{
-    if(rooms.includes(parseInt(req.body.room_code))){     //checking if list of rooms includes room_code
-        res.redirect(url.format({pathname:'game/'+req.body.room_code, query:{'creator':false}})) //redirecting to the game room with room code params and room creater parameter as false
-    }
+    res.redirect(url.format({pathname:'game/'+req.body.room_code, query:{'creator':false}})) //redirecting to the game room with room code params and room creater parameter as false
 });
 
 //game room along with room code
@@ -101,6 +99,10 @@ io.on('connection', (socket) => {
         //------------------------setting room, players....--------------------------------------
         room=room_no;  //setting the room to room_no and joining to the room and adding to the room_members dictionary
         socket.join(room); 
+        if(!(room_no in room_members)){
+            socket.emit("not found");
+            return;
+        }
         room_members[room_no].push({'id':id,'score':0});
 
         socket.emit('room',id);    //lettting it know its room (prototype)
@@ -128,8 +130,12 @@ io.on('connection', (socket) => {
             drawer_index=Math.floor(Math.random()*room_members[room].length)
             console.log('New index '+drawer_index)
             drawer_id = room_members[room][drawer_index].id;
+            for (i in room_members[room]){
+                room_members[room_no][i]={'id':room_members[room][i].id,'score':0}
+            }
             initial_index=drawer_index;
             io.to(room).emit('drawer',drawer_id);
+            io.to(room).emit('players',room_members[room]);
         })
         //other players know the drawer and the drawer server sends three random words to the drawer client
         socket.on('who_is_drawer',(a)=>{
@@ -228,8 +234,9 @@ io.on('connection', (socket) => {
                 if(drawer_index == room_members[room].length){
                     drawer_index = 0
                 }
-                if(drawer_index==initial_index){
+                if(drawer_index==initial_index){                    
                     io.to(room).emit('over',room_members[room]);
+                    return
                 }
                 drawer_id = room_members[room][drawer_index].id;
                 io.to(room).emit('drawer',drawer_id);

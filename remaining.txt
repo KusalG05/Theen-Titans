@@ -1,9 +1,8 @@
-1)new round
 2)new game
-4)scores
 5)leaving and joining in between
 6)words scraping
 8)multiple rooms
 9)wrong room code
-10)words wq3
-11)all players guess
+10)words repeat
+4)scores
+5)all guess
