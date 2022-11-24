@@ -16,20 +16,9 @@
   </head>
   <body>
     <div class="header">
-      <button class="profile-btn">
-        P
-        <img src="./resources/img_avatar.png" alt="Avatar" id="profile-img" />
-      </button>
-      <h1
-        style="
-          text-align: center;
-          font-family: cursive;
-          background-color: 2px solid black;
-        "
-      >
+      <h1 style="text-align: center; font-family: cursive">
         Your room no is <%= room_code %> Enjoy!!
       </h1>
-      <button class="btn btn-danger logout-btn">LogOut/Exit</button>
     </div>
     <div id="lobby">
       <div
@@ -38,7 +27,11 @@
       ></div>
       <div class="col-3" id="final_scores"></div>
       <% if(starter==='true'){ %>
-      <button onclick="start_game()" id="startgame">Start Game</button>
+      <div id="buttons">
+        <button class="btn btn-success" onclick="start_game()" id="startgame">
+          Start Game
+        </button>
+      </div>
       <% } %>
     </div>
     <div id="game" style="display: none">
@@ -66,55 +59,49 @@
             border-bottom: 2px solid black;
           "
         >
-          Artist now
+          Choose from Here
         </div>
-        <div id="choose" style="text-align: center">Saketh is drawing..</div>
+        <div id="choose" style="text-align: center">It's not your turn</div>
       </div>
       <!-- Change width and height of canvas for working of canvas.. ask saketh https://stackoverflow.com/questions/33191909/can-i-specify-canvas-dimensions-using-vh-and-vw -->
       <div id="drawarea">
         <div class="row">
-          <div class="col-2 col-s-2">
-            <div id="game_players"></div>
+          <div class="col-2 col-s-2 background_leaderboard">
+            <h3 style="text-align: center; height: 4vh">Leaderboard</h3>
+            <div id="game_players" class="list-group">
+              <ul id="leaderboard"></ul>
+            </div>
           </div>
-          <div class="col-4 col-s-6">
+          <div class="col-6 col-s-6">
             <canvas
               id="myCanvas"
-              height="500px"
-              width="1000px"
+              width="800px"
               style="border: 8px solid #000000"
             ></canvas>
             <div id="drawing_tools"></div>
           </div>
-          <div id="chat_box" class="col-4 col-s-4">
-            <div
-              style="
-                text-align: center;
-                background-color: rgb(110, 173, 200);
-                border-top-left-radius: 10px;
-                border-top-right-radius: 10px;
-                border-bottom: 2px solid black;
-                font-size: 25px;
-                font-weight: bolder;
-                font-family: cursive;
-              "
-            >
-              Chat Box
+          <div class="col-4 col-s-4">
+            <div id="chat_box">
+              <div
+                style="
+                  text-align: center;
+                  background-color: rgb(110, 173, 200);
+                  border-top-left-radius: 10px;
+                  border-top-right-radius: 10px;
+                  border-bottom: 2px solid black;
+                  font-size: 25px;
+                  font-weight: bolder;
+                  font-family: cursive;
+                "
+              >
+                Chat Box
+              </div>
+              <div>
+                <div id="id"></div>
+                <div id="chat_window"></div>
+              </div>
             </div>
-            <!-- <div class="col">
-            <ul class="list-group" id="players"></ul>
-          </div> -->
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-              "
-            >
-              <div id="id">A</div>
-              <div id="guess" class="left">B</div>
-              <div id="guess" class="right">B</div>
-              <div id="guess_input">C</div>
-            </div>
+            <div id="guess_input"></div>
           </div>
         </div>
       </div>

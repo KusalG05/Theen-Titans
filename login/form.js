@@ -10,19 +10,6 @@ var firebaseConfig = {
     
   const auth = firebase.auth();
   function signUp() {
-    // var email = document.getElementById("email");
-    // var password = document.getElementById("password");
-    
-  //   const promise = auth.createUserWithEmailAndPassword(
-  //     email.value,
-  //     password.value
-  //   );
-  //  promise.catch(error => alert(error.message))
-  //  window.location.replace('/signUp')
-  // }
-  // var f = document.querySelector('#signUp');
-  // f.addEventListener('submit', e => {
-  //   e.preventDefault();
     var email = document.getElementById("email");
     var password = document.getElementById("password");
     
@@ -32,44 +19,13 @@ var firebaseConfig = {
       password.value
     );
     console.log(email, password);
-      // Try sign-in with AJAX
-  // fetch('/login', {
-  //   method: 'POST',
-  //   body: new FormData(e.target),
-  //   credentials: 'include',s
-  // })
-  //   .then((res) => {
-  //     if (res.status == 200) {
-  //       return Promise.resolve();
-  //     } else {
-  //       return Promise.reject('Sign-in failed');
-  //     }
-  //   })
-  //   .then((profile) => {
-  //     // Instantiate PasswordCredential with the form
-  //     if (window.PasswordCredential) {
-  //       var c = new PasswordCredential(e.target);
-  //       return navigator.credentials.store(c);
-  //     } else {
-  //       return Promise.resolve(profile);
-  //     }
-  //   })
-  //   .then((profile) => {
-  //     // Successful sign-in
-  //     if (profile) {
-  //       updateUI(profile);
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     // Sign-in failed
-  //     showError('Sign-in Failed');
-  //   });
    promise.catch(error => alert(error.message))
    //window.location.replace('/signUp')
   }
   function signIn() {
     var email = document.getElementById("email");
     var password = document.getElementById("password");
+    console.log('hi');
     const promise = auth.signInWithEmailAndPassword(
               email.value, password.value);
     promise.catch(error => alert(error.message));
@@ -77,6 +33,9 @@ var firebaseConfig = {
   }
   function signIn2() {
     window.location.replace('/login')
+  }
+  function signUp2() {
+    window.location.replace('/signUp')
   }
   function signOut() {
     auth.signOut();
@@ -87,7 +46,8 @@ var firebaseConfig = {
   const unsubsribe= firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       var email = user.email;
-      window.location.replace('/')
+      console.log('yo');
+      // window.location.replace('/')
     }
     return unsubsribe;
   });

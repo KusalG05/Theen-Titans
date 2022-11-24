@@ -9,46 +9,33 @@
     <title>Login- Artwist</title>
   </head>
 
-  <!-- <body>
-    <div class="formContainer">
-      <h1>Enter Credentials Here:</h1>
-      <input type="email" placeholder="email here" id="email" />
-      <br />
-      <input type="password" placeholder="password here" id="password" />
-      <br />
-      <button onclick="signIn()" id="signIn">SignIn</button>
-      <a href="./signUp.html">
-        <button>SignUp</button>
-      </a>
-      <button onclick="signOut()" id="signOut">SignOut</button>
-    </div>
-  </body> -->
-  <!-- <body>
+  <body>
     <header>
       <h1>Portal for Login</h1>
     </header>
     <main>
-      <form id="login_form" class="form_class" method="post">
+      <div class="form_class">
         <div class="form_div">
           <label>Email:</label>
           <input
             class="field_class"
             name="login_txt"
             type="email"
+            id="email"
             placeholder="example@example.com"
             autofocus
           />
           <label>Password:</label>
           <input
-            id="pass"
             class="field_class"
             name="password_txt"
             type="password"
+            id="password"
             placeholder="Password"
           />
           <button
             class="submit_class"
-            id="signUp"
+            id="signIn"
             type="submit"
             form="login_form"
             onclick="signIn()"
@@ -59,16 +46,18 @@
         <div class="info_div">
           <p>
             Not registered yet?
-            <a href="./signUp.html">Sign Up</a>
+            <form action="/signUp">
+              <button onclick="signUp2()" class="submit_class">Sign Up</button>
+            </form>
           </p>
         </div>
-      </form>
+      </div>
     </main>
     <footer>
       <p>Artwist welcomes you</p>
     </footer>
-  </body> -->
-  <body>
+  </body>
+  <!-- <body>
     <div class="formContainer">
       <h1>Enter Credentials Here:</h1>
       <input type="email" placeholder="email here" id="email" />
@@ -79,7 +68,7 @@
       <button onclick="signIn()" id="signIp">SignIn</button>
       <button onclick="signOut()" id="signOut">SignOut</button>
     </div>
-  </body>
+  </body> -->
   <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
   <script src="form.js"></script>

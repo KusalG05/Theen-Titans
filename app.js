@@ -7,15 +7,27 @@ const io = new Server(server);
 const bodyParser=require('body-parser');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-var url=require('url')
+var url=require('url');
+const { info } = require('console');
+const { emit } = require('process');
 //----------------------------starting server-----------------------------------------------------------
-
 //This is for mentioning apply css to the html for all css files inside the path given in the argument
 app.use(express.static(__dirname));
 app.use(express.static(__dirname+"/Profile"));
 
 app.use(express.static(__dirname+"/login"))
 
+// const puppeteer = require('puppeteer');
+
+// (async ()=>{ 
+//   const browser = await puppeteer.launch();
+//   const page = await browser.newPage();
+//     await page.goto('https://www.thegamegal.com/word-generator/',{"waitUntil" : "networkidle0"});
+//     await page.click('#newword-button');
+//     const someContent = await page.$eval('#gennedword', el => el.innerHTML);
+//     console.log(someContent)
+//   await browser.close();
+// })();
 //---------------------------------homepage----------------------------------------
 //we are listening to the port 3000 for requests
 server.listen(3000, () => {
@@ -46,6 +58,9 @@ app.get('/signUp',(req,res)=>{
     res.sendFile(__dirname+'/login/signUp.html');
 })
 
+app.post('/home',(req,res)=>{
+    res.redirect("/");
+})
 //--------------------------------game room------------------------------------------
 //list of active rooms
 rooms=[];
@@ -83,8 +98,9 @@ app.get('/game/:room_code',(req, res)=>{
 player_id=0
 
 //list of words
-words=['bird','cloud','car','spider','man','rishi','mobile','table'];
+words=['bird','cloud','car','spider','man','rishi','mobile','table','new word','new word2','more words'];
 
+var selected_words =[]
 //socket connection
 io.on('connection', (socket) => {
     const id=player_id;
@@ -92,8 +108,9 @@ io.on('connection', (socket) => {
 
     // Adding player in room
     var room;
-    var word
-
+    var word;
+    var drawer=[]
+    var round=1
     //if we connect to room (defaultly called)
     socket.on('room_code', (room_no) => {
         //------------------------setting room, players....--------------------------------------
@@ -108,7 +125,7 @@ io.on('connection', (socket) => {
         socket.emit('room',id);    //lettting it know its room (prototype)
 
         io.to(room).emit('players',room_members[room]);    //showing the room_members
-
+        var guesses=0
         //disconnecting player
         socket.on('disconnect', function () {
             room_members[room] = room_members[room].filter(function (letter) {
@@ -128,7 +145,7 @@ io.on('connection', (socket) => {
             decider_id=id //since start_game is called by the first player, he becomes the decider_id
             //select random player and send to all players
             drawer_index=Math.floor(Math.random()*room_members[room].length)
-            console.log('New index '+drawer_index)
+            // console.log('New index '+drawer_index)
             drawer_id = room_members[room][drawer_index].id;
             for (i in room_members[room]){
                 room_members[room_no][i]={'id':room_members[room][i].id,'score':0}
@@ -142,31 +159,46 @@ io.on('connection', (socket) => {
             drawer_id=a;
             //-------------------------drawer --------------------
             if(id==drawer_id){
+                // console.log(selected_words);
                 var word1 = words[Math.floor(Math.random()*words.length)];
+                while(selected_words.includes(word1)){                    
+                    word1 = words[Math.floor(Math.random()*words.length)];
+                }
+                selected_words.push(word1);
                 var word2 = words[Math.floor(Math.random()*words.length)];
-                while(word2==word1){
+                while(selected_words.includes(word2)){
                     word2 = words[Math.floor(Math.random()*words.length)];
-                }
+                }                
+                selected_words.push(word2);
                 var word3 = words[Math.floor(Math.random()*words.length)];
-                while(word1==word3 || word2==word3){
+                while(selected_words.includes(word3)){
                     word3 = words[Math.floor(Math.random()*words.length)];
-                }
+                }          
+                selected_words.push(word3);
                 socket.emit('choose',{word1:word1, word2:word2, word3:word3});
             }
         })
         
         //after choosing they send their choice to the drawer server
         socket.on('chosen',(choice)=>{
+            drawer.push(id)
             word=choice;
             socket.to(room).emit('player_chose',choice); //the choice is sent to other clients
             //game starts and the timer starts
-            var counter = 15;
+            var counter = 150;
             var timer = setInterval(()=>{
                 io.to(room).emit('counter', counter);
                 counter--
+                // console.log('hi '+guesses)
+                if(guesses>=(room_members[room].length-1)&&guesses!=0){
+                    clearInterval(timer);
+                    io.to(room).emit('restart',0)
+                    return
+                }
                 if (counter === 0) {
                     io.to(room).emit('restart',0)
                     clearInterval(timer);
+                    return
                 }
             }, 1000);
 
@@ -211,10 +243,6 @@ io.on('connection', (socket) => {
             word=w;
             socket.on('guess',(a)=>{
                 if(a.guess==word){
-                    console.log(a.guesses)
-                    if(a.guesses==room_members[room].length-1){
-                        io.to(room).emit('restart',0) 
-                    }
                     io.to(room).emit('guess',{guess:a.guess,id:id,correct:true});
                     for(var i in  room_members[room]){
                         if(room_members[room][i].id==id){
@@ -226,14 +254,31 @@ io.on('connection', (socket) => {
                     io.to(room).emit('guess',{guess:a.guess,id:id,correct:false});
                 }
         })})
-
+        socket.on('correct_guess',()=>{
+            // if(drawer.includes(id)){
+            //     guesses=guesses+(1/(round-1));
+            // }
+            // else{
+            //     if(round>1){
+            //         guesses=guesses+1/(round-1)
+            //     }
+            //     else{
+            //         guesses=guesses+1;
+            //     }
+            // }
+            // console.log(id+'             ')
+            guesses=guesses+(1/round)
+        })
         //--------------------------------restart-------------------------------
         socket.on('start',()=>{
+            // console.log('started');
+            guesses=0
+            round++
             if(id==decider_id){
                 drawer_index=drawer_index+1
                 if(drawer_index == room_members[room].length){
                     drawer_index = 0
-                }
+                }   
                 if(drawer_index==initial_index){                    
                     io.to(room).emit('over',room_members[room]);
                     return
@@ -243,5 +288,9 @@ io.on('connection', (socket) => {
                 io.to(room).emit('players',room_members[room_no]);
             }
         });
+        socket.on('home', function(){
+            rooms.remove(room_no);
+            io.to(room).emit('home');
+        })
     }); 
 });

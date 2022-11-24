@@ -1,39 +1,46 @@
 // initializing canvas
 var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
-var heightRatio = 0.5;
+var heightRatio = 0.6;
+canvas.width = window.innerWidth * 0.45;
 canvas.height = canvas.width * heightRatio;
+console.log(canvas.width, canvas.height);
 var eraser=false;
 var draw = false; 
 var guesses=0;
 //initializing id
 var id;
+
+
 socket.on('room',(a)=>{
     id=a;
 });
 
 // recieving players list and adding html elements in game lobby/player list depending if the game has started
 socket.on('players',(a)=>{
-    game_players=document.getElementById('game_players')
+    game_players=document.getElementById('leaderboard');
+    // game_players.innerHTML="<ul id=\"leaderboard\">"
     game_players.innerHTML=""
-    for(var i in a){    
-        if(a[i].id==id){
-            game_players.innerHTML=game_players.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+a[i].id+"   -    "+a[i].score+"</li>"
-        }
-        else{
-            game_players.innerHTML=game_players.innerHTML+"<li class='list-group-item' style='width:100%'>"+a[i].id+"   -    "+a[i].score+"</li>"
-        }
+for(var i in a){    
+    if(a[i].id==id){
+        // game_players.innerHTML=game_players.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+a[i].id+"   -    "+a[i].score+"</li>"
+        game_players.innerHTML=game_players.innerHTML+"<div  class=\"list-group-item list-group-item-action\" style=\"display: flex; align-items: center; justify-content: space-between; background-color: greenyellow;\"> <img src=\"../Profile/resources/modi.png\" alt=\"modi ki jai\" class=\"profile\" />"+"\n"+"<p>" + a[i].id + "</p>"+"\n"+"<p> " + a[i].score + " pts</p> </div>"
     }
-    lobby=document.getElementById('players')
-    lobby.innerHTML=""
-    for(var i in a){
-        if(a[i].id==id){
-            lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start\"> <div>👤 <h3 class=\"fw-bold mb-0 fs-4\" style=\"background-color: grey\">Player"+a[i].id+"</h3> </div> </div>"
-        }
-        else{
-            lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start\"> <div>👤 <h3 class=\"fw-bold mb-0 fs-4\">Player"+a[i].id+"</h3> </div> </div>"
-        }
-    } 
+    else{
+        game_players.innerHTML=game_players.innerHTML+"<div  class=\"list-group-item list-group-item-action\" style=\"display: flex; align-items: center; justify-content: space-between; \"> <img src=\"../Profile/resources/modi.png\" alt=\"modi ki jai\" class=\"profile\" />"+"\n"+"<p>" + a[i].id + "</p>"+"\n"+"<p> " + a[i].score + " pts</p> </div>"
+    }
+}
+game_players.innerHTML=game_players.innerHTML+"</div>"
+lobby=document.getElementById('players')
+lobby.innerHTML=""
+for(var i in a){
+    if(a[i].id==id){
+        lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start self_player\">👤 <h3 class=\"fw-bold mb-0 fs-4\" >Player"+a[i].id+"</h3> </div>"
+    }
+    else{
+        lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start other_player\">👤 <h3 class=\"fw-bold mb-0 fs-4\">Player"+a[i].id+"</h3> </div>"
+    }
+} 
 })
 
 //on clicking play the function is called, game page is loaded and socket emits start_game
@@ -71,12 +78,13 @@ socket.on('drawer',(a)=>{
 //---------------------------------------Drawer---------------------------------------------------
 //the drawer server sends the list of words and they get displayed
 socket.on("choose",(a)=>{
-    document.getElementById('choose').innerHTML="<button onclick=\"send_choice(\'"+String(a.word1)+"\')\">"+String(a.word1)+"</button>"+'\n'+"<button onclick=\"send_choice(\'"+String(a.word2)+"\')\">"+String(a.word2)+"</button>"+'\n'+"<button onclick=\"send_choice(\'"+String(a.word3)+"\')\">"+String(a.word3)+"</button>"
+    document.getElementById('choose').innerHTML="<button class=\"choice_btn\" onclick=\"send_choice(\'"+String(a.word1)+"\')\">"+String(a.word1)+"</button>"+'\n'+"<button class=\"choice_btn\" onclick=\"send_choice(\'"+String(a.word2)+"\')\">"+String(a.word2)+"</button>"+'\n'+"<button class=\"choice_btn\" onclick=\"send_choice(\'"+String(a.word3)+"\')\">"+String(a.word3)+"</button>"
 });
 
 //once the choice is chosen the round starts and the drawign tools are visible
 function send_choice(choice){
-    document.getElementById('guess_input').innerHTML=""
+    document.getElementById('guess_input').innerHTML="";
+    document.getElementById('choose').innerHTML="You have chosen "+ choice;
     socket.emit('chosen',choice)
     canvas.addEventListener('touchstart', touchstart, false);
     canvas.addEventListener('touchmove', touchmove, false);
@@ -86,8 +94,21 @@ function send_choice(choice){
     canvas.addEventListener('mousemove', drawmove, false);
     canvas.addEventListener('mouseup', drawend, false);
 
-    document.getElementById("drawing_tools").innerHTML=" <button id=\"trash\" onclick=\"clears()\">🗑️</button>"+'\n'+"<button id=\"pencil\" onclick=\"writes()\">✏️</button>"+'\n'+"<button><img width=\"10\" height=\"20\" src=\"./resources/eraser.png\" alt=\"eraser\" id=\"eraser\" onclick=\"erases()\"/></button> "+'\n'+"<button style=\"background-color: red; width: 30px; height: 30px\" onclick=\"change_color('red')\" ></button>"+'\n'+"<button style=\"background-color: blue; width: 30px; height: 30px\" onclick=\"change_color('blue')\"></button>"+'\n'+"<button style=\"background-color: green; width: 30px; height: 30px\" onclick=\"change_color('green')\"></button>"+'\n'+"<button style=\"background-color: white; width: 30px; height: 30px\" onclick=\"change_color('white')\"></button>"+'\n'+"<button   style=\"background-color: yellow; width: 30px; height: 30px\" onclick=\"change_color('yellow')\"></button>"+'\n'+"<button style=\"background-color: orange; width: 30px; height: 30px\" onclick=\"change_color('orange')\"></button>"+'\n'+"<button style=\"background-color: black; width: 30px; height: 30px\" onclick=\"change_color('black')\"></button>"+'\n'+"<button style=\"background-color: pink; width: 30px; height: 30px\" onclick=\"change_color('pink')\"></button>"+'\n'+"<button style=\"background-color: brown; width: 30px; height: 30px\" onclick=\"change_color('brown')\" ></button>"+"<button style=\"font-size: 100px;border-color: white;background-color: white;box-shadow: 0 0 white;\" onclick=\"change_width(1)\">.</button><button style=\"font-size: 700px;border-color: white;background-color: white;box-shadow: 0 0 white;\" onclick=\"change_width(11)\">.</button><button style=\"font-size: 1000px;border-color: white;background-color: white;box-shadow: 0 0 white;\"onclick=\"change_width(30)\">.</button>";
-    document.getElementById("choose").innerHTML=""
+    document.getElementById("drawing_tools").innerHTML=" <button id=\"trash\" onclick=\"clears()\">🗑️</button>"+'\n'+
+    "<button id=\"pencil\" onclick=\"writes()\">✏️</button>"+'\n'+
+    "<button><img width=\"10\" height=\"20\" src=\"./resources/eraser.png\" alt=\"eraser\" id=\"eraser\" onclick=\"erases()\"/></button> "+'\n'+
+    "<button style=\"background-color: red; width: 30px; height: 30px\" onclick=\"change_color('red')\" ></button>"+'\n'+
+    "<button style=\"background-color: blue; width: 30px; height: 30px\" onclick=\"change_color('blue')\"></button>"+'\n'+
+    "<button style=\"background-color: green; width: 30px; height: 30px\" onclick=\"change_color('green')\"></button>"+'\n'+
+    "<button style=\"background-color: white; width: 30px; height: 30px\" onclick=\"change_color('white')\"></button>"+'\n'+
+    "<button   style=\"background-color: yellow; width: 30px; height: 30px\" onclick=\"change_color('yellow')\"></button>"+'\n'+
+    "<button style=\"background-color: orange; width: 30px; height: 30px\" onclick=\"change_color('orange')\"></button>"+'\n'+
+    "<button style=\"background-color: black; width: 30px; height: 30px\" onclick=\"change_color('black')\"></button>"+'\n'+
+    "<button style=\"background-color: pink; width: 30px; height: 30px\" onclick=\"change_color('pink')\"></button>"+'\n'+
+    "<button style=\"background-color: brown; width: 30px; height: 30px\" onclick=\"change_color('brown')\" ></button>"+'\n'+
+    "<button style=\"border-color: white;background-color: white;box-shadow: 0 0 white; height: 50px; width: 50px; display:flex; flex-direction:column; justify-content:center;\" onclick=\"change_width(1)\"><div style=\"border-radius:50%; background-color:black; height:5px; width:5px\"></div></button>"+'\n'+
+    "<button style=\"border-color: white;background-color: white;box-shadow: 0 0 white; height: 50px; width: 50px; display:flex; flex-direction:column; justify-content:center;\" onclick=\"change_width(11)\"><div style=\"border-radius:50%; background-color:black; height:15px; width:15px\"></div></button>"+'\n'+
+    "<button style=\"border-color: white;background-color: white;box-shadow: 0 0 white; height: 50px; width: 50px; display:flex; flex-direction:column; justify-content:center;\" onclick=\"change_width(30)\"><div style=\"border-radius:50%; background-color:black; height:30px; width:30px\"></div></button>";
     context.clearRect(0,0,canvas.width,canvas.height);
 }
 
@@ -173,7 +194,8 @@ function clears(){
 //the server of the drawer sends to the client of the guessers
 socket.on('player_chose',(a)=>{
     // guess bar gets activated
-    document.getElementById("guess_input").innerHTML="<input type=\"text\" id=\"myInput\" style=\"width:100%; height:50px; border:2px solid black; border-radius: 10px;\"/>"
+    document.getElementById('choose').innerHTML = "It's not your choice";
+    document.getElementById("guess_input").innerHTML="<input type=\"text\" id=\"myInput\" style=\"width:100%; height:50px; border:2px solid black; border-radius: 10px;\"/><button id=\"myEnt\" onclick=\"textEntered()\" style=\"border-radius:50%; height:50px; width:50px\">👉🏻</button>";
     context.clearRect(0,0,canvas.width,canvas.height);
     var input = document.getElementById("myInput");
     input.disabled=false;
@@ -197,13 +219,18 @@ function passToServer(a){
     });
 };
 
+function textEntered() {
+    var input = document.getElementById("myInput");
+    passToServer(input.value);
+    input.value="";
+};
+
 //getting the guessed word from server
 socket.on('guess',(a)=>{
     let message=""
     if(a.id==id){
-        message=message+"you guessed "
+        message=message+"You: "
         if(a.correct){
-            guesses+1
             console.log(guesses)
             message=message+"correct word"
             document.getElementById("myInput").disabled = true;
@@ -211,9 +238,10 @@ socket.on('guess',(a)=>{
         else{
             message=message+a.guess
         }
+        document.getElementById("chat_window").innerHTML=document.getElementById("chat_window").innerHTML+"<div id=\"guess\" class=\"right\">"+message+"</div><br>"
     }
     else{
-        message=message+"player "+a.id+" guessed "
+        message=message+"Player"+a.id+": "
         if(a.correct){
             guesses+1
             message=message+"correct word"
@@ -221,8 +249,12 @@ socket.on('guess',(a)=>{
         else{
             message=message+a.guess
         }
+        document.getElementById("chat_window").innerHTML=document.getElementById("chat_window").innerHTML+"<div id=\"guess\" class=\"left\">"+message+"</div><br>"
     }
-    document.getElementById("guess").innerHTML=document.getElementById("guess").innerHTML+message+"<br>"
+    // document.getElementById("guess").innerHTML=document.getElementById("guess").innerHTML+message+"<br>"
+    if(a.correct){
+        socket.emit('correct_guess')
+    }
 });
 
 socket.on('mouse_down',(event)=>{
@@ -307,9 +339,12 @@ socket.on('over',(a)=>{
     for(var i in sorted_scores){
         final_scores.innerHTML = final_scores.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+sorted_scores[i].id+"   -    "+sorted_scores[i].score+"</li>"
     }
-    document.getElementById("startgame").innerHTML='Play Again'
+    document.getElementById("buttons").innerHTML="<button onclick=\"start_game()\" id=\"startgame\">Start Game</button> <form action=\"/home\" method=\"post\" onclick=\"()=>{socket.emit('home')}\"> <button type=\"submit\" id=\"endgame\" onc>End Game</button></form>"
 })
 
+socket.on('home',()=>{
+    window.location.href = '../';
+})
 //------------------------------------------------------------------------------------------------
 socket.on('not found',()=>{
     document.getElementsByClassName("header")[0].innerHTML="<h1 >Room Not Found</h1>"

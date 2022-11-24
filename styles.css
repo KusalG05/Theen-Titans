@@ -13,8 +13,23 @@
     top:50%;
     transform: translate(-50%,-50%) scale(1);
     text-align:center;
-    padding:0 30px 30px;
+    padding:30px 30px 30px;
     visibility:visible;
+    border-radius: 8px;
+    background-color: white;
+    font-family: 'system-ui';
+    box-shadow: 5px 5px 10px rgb(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: blur(-1px);
+}
+
+#code{
+  display:block;
+  border: 2px solid black;
+  border-radius: 10px;
+  margin-bottom: 5px;
 }
 
 html {
@@ -105,16 +120,9 @@ html {
     height: 90vh;
   }
   .background_leaderboard{
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
-    /* height: 90vh;
-    width: 100%;
-    background: url(./background.jpg) no-repeat center center;
-    background-size: cover; */
     background-image: linear-gradient(white,rgb(244, 247, 195), white);
     height: 90vh;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     border-radius: 10px;
   }
 
@@ -128,3 +136,32 @@ html {
   #leaderboard::-webkit-scrollbar{
     display: none;
   }
+
+  .blurrer > *:not(.lobby .lobby_present) {
+    filter: blur(1px);
+  }
+
+.profile{
+  background-color: purple;
+  height: 50px;
+  width: 50px;
+  border: 2px solid black;
+  border-radius: 50%;
+  background: url(./Profile/resources/modi.png);
+  background-size: cover;
+}
+
+
+p{
+  margin: 0px 0px;
+  display: inline;
+}
+
+.leaderboard_player{
+  border-radius: 30px !important;
+  margin: 5px 0px;
+  background-image: linear-gradient(to right,white,rgb(134, 193, 241),white);
+}
+.leaderboard_player:hover{
+  background-image: linear-gradient(to right, green,white,green);
+}
