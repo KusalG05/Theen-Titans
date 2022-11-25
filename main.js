@@ -16,3 +16,7 @@ function close1(){
     var open=document.getElementById("trail");
     open.classList.remove("blurrer");
 }
+
+window.addEventListener('click', e => {
+    close1();
+});

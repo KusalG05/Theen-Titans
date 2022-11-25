@@ -39,13 +39,18 @@ server.listen(3000, () => {
 //req refers to the request variable and res is the response which we can modify
 app.get('/', (req, res) => {
     //in response we are rendering index.ejs file
-    res.render(__dirname + '/index.ejs');
+    res.render(__dirname + '/index.ejs',{user:req.query.user});
 });  
+
+app.post('/account',(req,res)=>{
+    res.redirect(url.format({pathname:'/account', query:{'user':req.query.user}}));
+})
 
 //user account page route
 app.get('/account', (req, res) => {
     //in response we are rendering user.ejs file
-    res.render(__dirname + '/Profile/user.ejs');
+    res.render(__dirname + '/Profile/user.ejs',{user:req.query.user});
+    console.log(req.query.user);
 });
 
 //login page route
@@ -77,19 +82,19 @@ app.post('/create_room',(req,res)=>{
     }
     rooms.push(room_code);
     room_members[room_code]=[]
-
+    console.log(req.body)
     //redirecting to the game room with room code params and room creater parameter as true
-    res.redirect(url.format({pathname:'game/'+room_code, query:{'creator':true}}))
+    res.redirect(url.format({pathname:'game/'+room_code, query:{'creator':true,'user':req.query.user}}))
 });
 
 //Joining game room
 app.post('/join',(req, res)=>{
-    res.redirect(url.format({pathname:'game/'+req.body.room_code, query:{'creator':false}})) //redirecting to the game room with room code params and room creater parameter as false
+    res.redirect(url.format({pathname:'game/'+req.body.room_code, query:{'creator':false,'user':req.query.user}})) //redirecting to the game room with room code params and room creater parameter as false
 });
 
 //game room along with room code
 app.get('/game/:room_code',(req, res)=>{
-    res.render(__dirname+'/game/game.ejs',{ room_code:req.params.room_code,starter:req.query.creator }); 
+    res.render(__dirname+'/game/game.ejs',{ room_code:req.params.room_code,starter:req.query.creator,user:req.query.user }); 
 });
 
 //--------------------------------Game logic----------------------------------
@@ -103,8 +108,8 @@ words=['bird','cloud','car','spider','man','rishi','mobile','table','new word','
 var selected_words =[]
 //socket connection
 io.on('connection', (socket) => {
-    const id=player_id;
-    player_id=player_id+1;
+    // const id=player_id;
+    // player_id=player_id+1;
 
     // Adding player in room
     var room;
@@ -112,15 +117,16 @@ io.on('connection', (socket) => {
     var drawer=[]
     var round=1
     //if we connect to room (defaultly called)
-    socket.on('room_code', (room_no) => {
+    socket.on('room_code', (a) => {
         //------------------------setting room, players....--------------------------------------
-        room=room_no;  //setting the room to room_no and joining to the room and adding to the room_members dictionary
+        room=a.room_code;
+        id=a.user  //setting the room to room and joining to the room and adding to the room_members dictionary
         socket.join(room); 
-        if(!(room_no in room_members)){
+        if(!(room in room_members)){
             socket.emit("not found");
             return;
         }
-        room_members[room_no].push({'id':id,'score':0});
+        room_members[room].push({'id':id,'score':0});
 
         socket.emit('room',id);    //lettting it know its room (prototype)
 
@@ -148,7 +154,7 @@ io.on('connection', (socket) => {
             // console.log('New index '+drawer_index)
             drawer_id = room_members[room][drawer_index].id;
             for (i in room_members[room]){
-                room_members[room_no][i]={'id':room_members[room][i].id,'score':0}
+                room_members[room][i]={'id':room_members[room][i].id,'score':0}
             }
             initial_index=drawer_index;
             io.to(room).emit('drawer',drawer_id);
@@ -285,11 +291,11 @@ io.on('connection', (socket) => {
                 }
                 drawer_id = room_members[room][drawer_index].id;
                 io.to(room).emit('drawer',drawer_id);
-                io.to(room).emit('players',room_members[room_no]);
+                io.to(room).emit('players',room_members[room]);
             }
         });
         socket.on('home', function(){
-            rooms.remove(room_no);
+            rooms.remove(room);
             io.to(room).emit('home');
         })
     }); 

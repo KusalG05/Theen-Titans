@@ -15,15 +15,15 @@
     <main>
       <div class="form_class">
         <div class="form_div">
-          <form>
-          <label>Email:</label>
+          <form id="signup">
+          <label>username:</label>
           <input
             class="field_class"
-            name="login_txt"
-            type="email"
-            id="email"
-            placeholder="example@example.com"
-            autocomplete="username email"
+            name="user_txt"
+            type="text"
+            id="username"
+            placeholder="Enter username"
+            autocomplete=""
             autofocus
           />
           <label>Password:</label>
@@ -48,8 +48,6 @@
             class="submit_class"
             id="signUp"
             type="submit"
-            form="login_form"
-            onclick="signUp()"
           >
             Sign Up
           </button>
@@ -68,9 +66,26 @@
       <p>Artwist welcomes you</p>
     </footer>
   </body>
-  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+    https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
 
-  <script type="text/javascript" src="./form.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCvvpxdf0EEEz4hWng409wFpH9mAL5Sw-g",
+      authDomain: "artwister-c0c8e.firebaseapp.com",
+      projectId: "artwister-c0c8e",
+      storageBucket: "artwister-c0c8e.appspot.com",
+      messagingSenderId: "468334760517",
+      appId: "1:468334760517:web:248ac98c2a2198a4a2092c",
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+  <script src="./signUp.js"></script>
 </html>

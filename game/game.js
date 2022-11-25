@@ -35,10 +35,10 @@ lobby=document.getElementById('players')
 lobby.innerHTML=""
 for(var i in a){
     if(a[i].id==id){
-        lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start self_player\">👤 <h3 class=\"fw-bold mb-0 fs-4\" >Player"+a[i].id+"</h3> </div>"
+        lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start self_player\">👤 <h3 class=\"fw-bold mb-0 fs-4\" >"+a[i].id+"</h3> </div>"
     }
     else{
-        lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start other_player\">👤 <h3 class=\"fw-bold mb-0 fs-4\">Player"+a[i].id+"</h3> </div>"
+        lobby.innerHTML=lobby.innerHTML+"<div class=\"col d-flex align-items-start other_player\">👤 <h3 class=\"fw-bold mb-0 fs-4\">"+a[i].id+"</h3> </div>"
     }
 } 
 })
@@ -241,7 +241,7 @@ socket.on('guess',(a)=>{
         document.getElementById("chat_window").innerHTML=document.getElementById("chat_window").innerHTML+"<div id=\"guess\" class=\"right\">"+message+"</div><br>"
     }
     else{
-        message=message+"Player"+a.id+": "
+        message=message+a.id+": "
         if(a.correct){
             guesses+1
             message=message+"correct word"
