@@ -1,5 +1,1 @@
-1) login
-4)scores
-5) Game not working
 6)all guess
-7) restart game

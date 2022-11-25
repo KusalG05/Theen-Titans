@@ -115,7 +115,8 @@ app.get('/game/:room_code',(req, res)=>{
 player_id=0
 
 //list of words
-words=['bird','cloud','car','spider','man','rishi','mobile','table','new word','new word2','more words'];
+words=["kite","boat","coin","lion","hippo","star","table","computer","seashell","bike","stairs","clock","person","hand","shoe","neck","hair","pen","ball","desk","basketball","feather","window","square","crayon","bug","curl","airplane","rain","sunglasses","mouth","feet","roll","bug","nail","shirt","chicken","jellyfish","broom","cherry","legs","fork","banana","ghost","ears","head","elephant","water","monster","ring","purse","bottle","watch","clocks","phone"
+];
 
 var selected_words =[]
 //socket connection
