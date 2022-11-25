@@ -32,6 +32,7 @@ var firebaseConfig = {
     window.location.replace('/')
   }
   function signIn2() {
+    console.log('signIn2');
     window.location.replace('/login')
   }
   function signUp2() {

@@ -102,15 +102,15 @@ db.collection('users').onSnapshot(snapshot => {
 })
 
 // Click submit in add modal
-  addModalForm.addEventListener('submit', e => {
-    e.preventDefault();
-    db.collection('users').add({
-      firstName: addModalForm.firstName.value,
-      lastName: addModalForm.lastName.value,
-      phone: addModalForm.phone.value,
-      email: addModalForm.email.value,
-    });
-    modalWrapper.classList.remove('modal-show');
+addModalForm.addEventListener('submit', e => {
+  e.preventDefault();
+  db.collection('users').add({
+    firstName: addModalForm.firstName.value,
+    lastName: addModalForm.lastName.value,
+    phone: addModalForm.phone.value,
+    email: addModalForm.email.value,
+  });
+  modalWrapper.classList.remove('modal-show');
 });
 
 // Click submit in edit modal

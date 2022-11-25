@@ -63,7 +63,7 @@ socket.on('drawer',(a)=>{
         context.font = "30px Comic Sans MS";
         context.fillStyle = "red";
         context.textAlign = "center";
-        context.fillText("Player " + a + " is choosing a word...",(canvas.width / 2), (canvas.height / 2));
+        context.fillText(a + " is choosing a word...",(canvas.width / 2), (canvas.height / 2));
     }
     else{
         context.font = "30px Comic Sans MS";
@@ -336,15 +336,27 @@ socket.on('over',(a)=>{
     var sorted_scores=a.sort((a,b)=>{return -a.score+b.score})
     final_scores=document.getElementById('final_scores')
     final_scores.innerHTML="The winner is "+sorted_scores[0].id
+    let params = (new URL(document.location)).searchParams;
+    let user = params.get("user");
+    let score
     for(var i in sorted_scores){
+        if(sorted_scores[i]==user){
+            score=sorted_scores[i].score
+        }
         final_scores.innerHTML = final_scores.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+sorted_scores[i].id+"   -    "+sorted_scores[i].score+"</li>"
     }
-    document.getElementById("buttons").innerHTML="<button onclick=\"start_game()\" id=\"startgame\">Start Game</button> <form action=\"/home\" method=\"post\" onclick=\"()=>{socket.emit('home')}\"> <button type=\"submit\" id=\"endgame\" onc>End Game</button></form>"
+    db.collection('users').get().then(snapshot=>{
+        snapshot.docs.forEach(doc => {
+            if(doc.data().username == user){
+                db.collection("users").doc(doc.id).update({games: doc.data().games+1});
+            }
+            if(doc.data().highestScore<score){
+                db.collection("users").doc(doc.id).update({highestScore: score});
+            }
+        })
+    })
 })
 
-socket.on('home',()=>{
-    window.location.href = '../';
-})
 //------------------------------------------------------------------------------------------------
 socket.on('not found',()=>{
     document.getElementsByClassName("header")[0].innerHTML="<h1 >Room Not Found</h1>"

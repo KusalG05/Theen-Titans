@@ -5,6 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="../logo.jpg" type="image/x-icon" />
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+    crossorigin="anonymous"
+  />
     <link rel="stylesheet" href="./loginStyles.css" />
     <title>Login- Artwist</title>
   </head>
@@ -16,32 +22,32 @@
     <main>
       <div class="form_class">
         <div class="form_div">
-          <label>Username:</label>
-          <input
-            class="field_class"
-            name="username_txt"
-            type="text"
-            id="username"
-            placeholder="Enter your username"
-            autofocus
-          />
-          <label>Password:</label>
-          <input
-            class="field_class"
-            name="password_txt"
-            type="password"
-            id="password"
-            placeholder="Password"
-          />
-          <button
-            class="submit_class"
-            id="signIn"
-            type="submit"
-            form="login_form"
-            onclick="signIn()"
-          >
-            Sign In
-          </button>
+          <form id="login">
+            <label>Username:</label>
+            <input
+              class="field_class"
+              name="username_txt"
+              type="text"
+              id="username"
+              placeholder="Enter your username"
+              autofocus
+            />
+            <label>Password:</label>
+            <input
+              class="field_class"
+              name="password_txt"
+              type="password"
+              id="password"
+              placeholder="Password"
+            />
+            <button
+              class="submit_class"
+              id="signIn"
+              type="submit"
+            >
+              Sign In
+            </button>
+          </form>
         </div>
         <div class="info_div">
           <p>
@@ -57,8 +63,28 @@
       <p>Artwist welcomes you</p>
     </footer>
   </body>
+  
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+ <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
-  <script src="login.js"></script>
+ <!-- TODO: Add SDKs for Firebase products that you want to use
+   https://firebase.google.com/docs/web/setup#available-libraries -->
+ <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
+ 
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+ <script>
+   // Your web app's Firebase configuration
+   var firebaseConfig = {
+     apiKey: "AIzaSyCvvpxdf0EEEz4hWng409wFpH9mAL5Sw-g",
+     authDomain: "artwister-c0c8e.firebaseapp.com",
+     projectId: "artwister-c0c8e",
+     storageBucket: "artwister-c0c8e.appspot.com",
+     messagingSenderId: "468334760517",
+     appId: "1:468334760517:web:248ac98c2a2198a4a2092c",
+   };
+   // Initialize Firebase
+   firebase.initializeApp(firebaseConfig);
+   const db = firebase.firestore();
+ </script>
+  <script src="./login.js"></script>
 </html>

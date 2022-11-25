@@ -29,7 +29,7 @@
         <form action="/account?user=<%= user %>" method="post">
           <button type="submit" class="profile"></button>
         </form>
-        <h1 class="title">Drawize</h1>
+        <h1 class="title">Drawizer</h1>
         <form action="/login">
           <button type="submit" class="btn btn-primary">Login</button>
         </form>
@@ -66,6 +66,17 @@
                 Create Room
               </button>
             </form>
+            <!-- <div class="lobby" id="join">
+              <form action="/join" method="post">
+                <input
+                  type="text"
+                  name="room_code"
+                  placeholder="Enter Room Code"
+                  id="code"
+                />
+                <button type="submit" class="btn btn-primary">Join Room</button>
+              </form>
+            </div> -->
             <button
               type="button"
               class="btn btn-primary"
@@ -90,14 +101,29 @@
         </div>
       </div>
       <div class="col-3 col-s-12 background_leaderboard">
-        <h3 style="text-align: center; height: 4vh">Leaderboard</h3>
+        <p
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            font-family: cursive;
+            border-radius: 10px;
+            height: 45px;
+            border: 2px solid black;
+            background-color: aqua;
+          "
+        >
+          Leaderboard
+        </p>
         <!-- <ul id="leaderboard"> -->
         <!-- We need to create a leaderboard which shows score and profile photo and user name.. that will be done in backend but styling and ids i will decide -->
         <div class="list-group">
           <ul id="leaderboard">
             <a
               href="#"
-              class="list-group-item list-group-item-action"
+              class="leaderboard_player list-group-item list-group-item-action"
               style="
                 display: flex;
                 align-items: center;
@@ -164,7 +190,7 @@
       </div>
     </div>
     <div class="lobby" id="join">
-      <form action="/join" method="post">
+      <form action="/join?user=<%= user %>" method="post">
         <input
           type="text"
           name="room_code"
@@ -188,5 +214,26 @@
     integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
     crossorigin="anonymous"
   ></script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCvvpxdf0EEEz4hWng409wFpH9mAL5Sw-g",
+      authDomain: "artwister-c0c8e.firebaseapp.com",
+      projectId: "artwister-c0c8e",
+      storageBucket: "artwister-c0c8e.appspot.com",
+      messagingSenderId: "468334760517",
+      appId: "1:468334760517:web:248ac98c2a2198a4a2092c",
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
   <script src="main.js"></script>
 </html>

@@ -37,6 +37,10 @@ server.listen(3000, () => {
 
 //what to do when it recieves a request for the path "/" which is basically the homepath
 //req refers to the request variable and res is the response which we can modify
+app.post("/",(req,res)=>{
+    res.redirect(url.format({pathname:'/', query:{'user':req.query.user}}));
+})
+
 app.get('/', (req, res) => {
     //in response we are rendering index.ejs file
     res.render(__dirname + '/index.ejs',{user:req.query.user});
@@ -116,11 +120,13 @@ io.on('connection', (socket) => {
     var word;
     var drawer=[]
     var round=1
+    var id
     //if we connect to room (defaultly called)
     socket.on('room_code', (a) => {
         //------------------------setting room, players....--------------------------------------
         room=a.room_code;
         id=a.user  //setting the room to room and joining to the room and adding to the room_members dictionary
+        console.log(id);
         socket.join(room); 
         if(!(room in room_members)){
             socket.emit("not found");
@@ -157,12 +163,15 @@ io.on('connection', (socket) => {
                 room_members[room][i]={'id':room_members[room][i].id,'score':0}
             }
             initial_index=drawer_index;
+            console.log('Drawer '+drawer_id);
             io.to(room).emit('drawer',drawer_id);
             io.to(room).emit('players',room_members[room]);
+            console.log('room members '+room_members[room]);
         })
         //other players know the drawer and the drawer server sends three random words to the drawer client
         socket.on('who_is_drawer',(a)=>{
             drawer_id=a;
+            console.log("who is drawer "+drawer_id+" checking with "+id);
             //-------------------------drawer --------------------
             if(id==drawer_id){
                 // console.log(selected_words);
@@ -191,7 +200,7 @@ io.on('connection', (socket) => {
             word=choice;
             socket.to(room).emit('player_chose',choice); //the choice is sent to other clients
             //game starts and the timer starts
-            var counter = 150;
+            var counter = 5;
             var timer = setInterval(()=>{
                 io.to(room).emit('counter', counter);
                 counter--
@@ -255,24 +264,17 @@ io.on('connection', (socket) => {
                             room_members[room][i].score=room_members[room][i].score+a.time;
                         }
                     }
+                    for(var i in room_members[room]){
+                        if(room_members[room][i].id==drawer_id){
+                            room_members[room][i].score=room_members[room][i].score+Math.floor(a.time/3);
+                        }
+                    }
                 }
                 else{
                     io.to(room).emit('guess',{guess:a.guess,id:id,correct:false});
                 }
         })})
         socket.on('correct_guess',()=>{
-            // if(drawer.includes(id)){
-            //     guesses=guesses+(1/(round-1));
-            // }
-            // else{
-            //     if(round>1){
-            //         guesses=guesses+1/(round-1)
-            //     }
-            //     else{
-            //         guesses=guesses+1;
-            //     }
-            // }
-            // console.log(id+'             ')
             guesses=guesses+(1/round)
         })
         //--------------------------------restart-------------------------------

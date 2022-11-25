@@ -29,19 +29,49 @@
               <td id="username"><%= user %></td>
             </tr>
             <tr>
-              <td>Email</td>
-              <td id="email">modi@bjp.com</td>
+              <td>Number of games played</td>
+              <td id="games"></td>
+            </tr>
+            <tr>
+              <td>Highest score</td>
+              <td id="highest"></td>
             </tr>
             <tr>
               <td>Global Ranking</td>
-              <td id="rank">1</td>
+              <td id="rank"></td>
             </tr>
           </tbody>
         </table>
-        <form action="/" style="display: flex; justify-content: center">
+        <form
+          action="/?user=<%= user %>"
+          style="display: flex; justify-content: center"
+          method="post"
+        >
           <button class="btn btn-danger">Exit</button>
         </form>
       </div>
     </main>
   </body>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+    https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCvvpxdf0EEEz4hWng409wFpH9mAL5Sw-g",
+      authDomain: "artwister-c0c8e.firebaseapp.com",
+      projectId: "artwister-c0c8e",
+      storageBucket: "artwister-c0c8e.appspot.com",
+      messagingSenderId: "468334760517",
+      appId: "1:468334760517:web:248ac98c2a2198a4a2092c",
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+  <script src="./user.js"></script>
 </html>
