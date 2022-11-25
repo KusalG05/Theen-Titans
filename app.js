@@ -208,7 +208,7 @@ io.on('connection', (socket) => {
             word=choice;
             socket.to(room).emit('player_chose',choice); //the choice is sent to other clients
             //game starts and the timer starts
-            var counter = 5;
+            var counter = 150;
             var timer = setInterval(()=>{
                 io.to(room).emit('counter', counter);
                 counter--
