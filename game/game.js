@@ -48,6 +48,7 @@ function start_game(){ //for starting player
     document.getElementById('lobby').style.display='none';
     document.getElementById('game').style.display='block';
     start=true;
+    document.getElementById('buttons').innerHTML='';
     socket.emit('start_game')
 }
 
@@ -59,19 +60,21 @@ socket.on('start_game', ()=>{// for other player
 
 //information about the drawer is sent and let its socket know
 socket.on('drawer',(a)=>{
-    if(a!=id){
+    if(a.drawer_id!=id){
         context.font = "30px Comic Sans MS";
         context.fillStyle = "red";
         context.textAlign = "center";
-        context.fillText(a + " is choosing a word...",(canvas.width / 2), (canvas.height / 2));
+        context.fillText(a.message,(canvas.width / 2), (canvas.height / 2)-30)
+        context.fillText(a.drawer_id + " is choosing a word...",(canvas.width / 2), (canvas.height / 2)+10);
     }
     else{
         context.font = "30px Comic Sans MS";
         context.fillStyle = "red";
         context.textAlign = "center";
-        context.fillText("Its your turn choose a word",(canvas.width / 2), (canvas.height / 2));
+        context.fillText(a.message,(canvas.width / 2), (canvas.height / 2)-30)
+        context.fillText("Its your turn choose a word",(canvas.width / 2), (canvas.height / 2)+10);
     }
-    socket.emit('who_is_drawer',a)  
+    socket.emit('who_is_drawer',a.drawer_id)  
 })
 
 
@@ -231,7 +234,6 @@ socket.on('guess',(a)=>{
     if(a.id==id){
         message=message+"You: "
         if(a.correct){
-            console.log(guesses)
             message=message+"correct word"
             document.getElementById("myInput").disabled = true;
         }
@@ -330,17 +332,19 @@ socket.on('restart',()=>{
     }
 })
 
+let score
 socket.on('over',(a)=>{
     document.getElementById('lobby').style.display='block';
     document.getElementById('game').style.display='none';
-    var sorted_scores=a.sort((a,b)=>{return -a.score+b.score})
+    var sorted_scores=a.sort((c,b)=>{return -c.score+b.score})
     final_scores=document.getElementById('final_scores')
     final_scores.innerHTML="The winner is "+sorted_scores[0].id
     let params = (new URL(document.location)).searchParams;
     let user = params.get("user");
-    let score
     for(var i in sorted_scores){
-        if(sorted_scores[i]==user){
+        console.log("in loop" + sorted_scores[i])
+        if(sorted_scores[i].id==user){
+            console.log('hi')
             score=sorted_scores[i].score
         }
         final_scores.innerHTML = final_scores.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+sorted_scores[i].id+"   -    "+sorted_scores[i].score+"</li>"
@@ -349,12 +353,17 @@ socket.on('over',(a)=>{
         snapshot.docs.forEach(doc => {
             if(doc.data().username == user){
                 db.collection("users").doc(doc.id).update({games: doc.data().games+1});
-            }
-            if(doc.data().highestScore<score){
-                db.collection("users").doc(doc.id).update({highestScore: score});
-            }
+                console.log(doc.data().highestScore)
+                console.log(score)
+                if(doc.data().highestScore<score){
+                    console.log('here')
+                    db.collection("users").doc(doc.id).update({highestScore: score});
+                }
+        }
         })
     })
+    document.getElementById('home').innerHTML="<form action=\"/?user="+user+"\" method=\"post\">    <button type=\"submit\" class=\"profile\">Go to Home</button>  </form>"
+
 })
 
 //------------------------------------------------------------------------------------------------

@@ -37,13 +37,21 @@ server.listen(3000, () => {
 
 //what to do when it recieves a request for the path "/" which is basically the homepath
 //req refers to the request variable and res is the response which we can modify
-app.post("/",(req,res)=>{
-    res.redirect(url.format({pathname:'/', query:{'user':req.query.user}}));
-})
 
-app.get('/', (req, res) => {
-    //in response we are rendering index.ejs file
-    res.render(__dirname + '/index.ejs',{user:req.query.user});
+
+
+app.post("/",(req,res)=>{
+        res.redirect(url.format({pathname:'/', query:{'user':req.query.user}}));
+    })
+    
+    app.get('/', (req, res) => {
+        //in response we are rendering index.ejs file
+        if(req.query.user){
+            res.render(__dirname + '/index.ejs',{user:req.query.user});
+        }
+        else{
+            res.redirect("/login")
+        }
 });  
 
 app.post('/account',(req,res)=>{
@@ -164,7 +172,7 @@ io.on('connection', (socket) => {
             }
             initial_index=drawer_index;
             console.log('Drawer '+drawer_id);
-            io.to(room).emit('drawer',drawer_id);
+            io.to(room).emit('drawer',{drawer_id:drawer_id,message:""});
             io.to(room).emit('players',room_members[room]);
             console.log('room members '+room_members[room]);
         })
@@ -200,7 +208,7 @@ io.on('connection', (socket) => {
             word=choice;
             socket.to(room).emit('player_chose',choice); //the choice is sent to other clients
             //game starts and the timer starts
-            var counter = 5;
+            var counter = 15;
             var timer = setInterval(()=>{
                 io.to(room).emit('counter', counter);
                 counter--
@@ -292,13 +300,9 @@ io.on('connection', (socket) => {
                     return
                 }
                 drawer_id = room_members[room][drawer_index].id;
-                io.to(room).emit('drawer',drawer_id);
+                io.to(room).emit('drawer',{drawer_id:drawer_id,message:"The correct word is "+word});
                 io.to(room).emit('players',room_members[room]);
             }
         });
-        socket.on('home', function(){
-            rooms.remove(room);
-            io.to(room).emit('home');
-        })
     }); 
 });
