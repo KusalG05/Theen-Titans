@@ -5,13 +5,13 @@ This are set of guildlines that how to use the website and what softwares we use
 Instructions to use our web site :
  
  First, clone our repository and open the project directory in terminal/powershell 
- Install dependencies of our website using the commands <br/>
- npm install or npm i <br/>
- Finally run <br/>
- node app.js or nodemon  app.js  (if nodemon is already installed) but prefer node app.js <br/>
- go to browser and type <br/>
- localhost:3000 <br/>
- now you can use our website<br/>
+ Install dependencies of our website using the commands <br/><br/>
+ npm install or npm i <br/><br/>
+ Finally run <br/><br/>
+ node app.js or nodemon  app.js  (if nodemon is already installed) but prefer node app.js <br/><br/>
+ go to browser and type <br/><br/>
+ localhost:3000 <br/><br/>
+ now you can use our website<br/><br/>
  
  Details about our Technical  Stuff:
  
