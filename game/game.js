@@ -240,7 +240,8 @@ socket.on('guess',(a)=>{
         else{
             message=message+a.guess
         }
-        document.getElementById("chat_window").innerHTML=document.getElementById("chat_window").innerHTML+"<div id=\"guess\" class=\"right\">"+message+"</div><br>"
+        const myArray = message.split(":",2);
+        document.getElementById("chat_window").innerHTML=document.getElementById("chat_window").innerHTML+"<div id=\"guess\" class=\"right\"><div class=\"sender\">"+myArray[0]+"</div><div class=\"message\">"+myArray[1]+"</div></div><br>"
     }
     else{
         message=message+a.id+": "
@@ -251,7 +252,8 @@ socket.on('guess',(a)=>{
         else{
             message=message+a.guess
         }
-        document.getElementById("chat_window").innerHTML=document.getElementById("chat_window").innerHTML+"<div id=\"guess\" class=\"left\">"+message+"</div><br>"
+        const myArray = message.split(":",2);
+        document.getElementById("chat_window").innerHTML=document.getElementById("chat_window").innerHTML+"<div id=\"guess\" class=\"left\"><div class=\"reciever\">"+myArray[0]+"</div><div class=\"message\">"+myArray[1]+"</div></div><br>"
     }
     // document.getElementById("guess").innerHTML=document.getElementById("guess").innerHTML+message+"<br>"
     if(a.correct){
@@ -338,7 +340,9 @@ socket.on('over',(a)=>{
     document.getElementById('game').style.display='none';
     var sorted_scores=a.sort((c,b)=>{return -c.score+b.score})
     final_scores=document.getElementById('final_scores')
-    final_scores.innerHTML="The winner is "+sorted_scores[0].id
+    // score_board = document.getElementById('score_board')
+    // score_board.innerHTML = ""
+    final_scores.innerHTML="<div id=\"winner\" class=\"font-effect-neon\">The winner is "+sorted_scores[0].id+"</div>" + final_scores.innerHTML;
     let params = (new URL(document.location)).searchParams;
     let user = params.get("user");
     for(var i in sorted_scores){
@@ -347,7 +351,11 @@ socket.on('over',(a)=>{
             console.log('hi')
             score=sorted_scores[i].score
         }
-        final_scores.innerHTML = final_scores.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+sorted_scores[i].id+"   -    "+sorted_scores[i].score+"</li>"
+        // score_board.innerHTML = score_board.innerHTML+"<a href=\"#\" class=\"leaderboard_player list-group-item list-group-item-action\" style=\" display: flex; align-items: center; justify-content: space-between;\"> <img src=\"./Profile/resources/modi.png\" alt=\"modi ki jai\" class=\"profile\" /> <p>" + sorted_scores[i].id + "</p> <p>" + sorted_scores[i].score+ + "pts</p> </a>"
+
+        // score_board.innerHTML = score_board.innerHTML+"<li class='list-group-item' style='width:100%; background-color:#81db76'>"+sorted_scores[i].id+"   -    "+sorted_scores[i].score+"</li>"
+
+        final_scores.innerHTML = final_scores.innerHTML+"<li class='list-group-item score_item'><p>"+sorted_scores[i].id+"</p> <p>"+sorted_scores[i].score+"</p></li>"
     }
     db.collection('users').get().then(snapshot=>{
         snapshot.docs.forEach(doc => {
@@ -362,7 +370,7 @@ socket.on('over',(a)=>{
         }
         })
     })
-    document.getElementById('home').innerHTML="<form action=\"/?user="+user+"\" method=\"post\">    <button type=\"submit\" class=\"profile\">Go to Home</button>  </form>"
+    document.getElementById('home').innerHTML="<form action=\"/?user="+user+"\" method=\"post\">    <button type=\"submit\" class=\"btn btn-success\">Go to Home</button>  </form>"
 
 })
 

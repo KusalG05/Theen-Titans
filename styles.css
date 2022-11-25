@@ -117,17 +117,17 @@ html {
     background-size: cover; */
     /* background-color: rgb(244, 247, 195); */
     background-image: linear-gradient(white,rgb(244, 247, 195), white);
-    height: 90vh;
+    height: 86vh;
   }
   .background_leaderboard{
     background-image: linear-gradient(white,rgb(244, 247, 195), white);
-    height: 90vh;
+    height: 86vh;
     /* border: 2px solid black; */
     border-radius: 10px;
   }
 
   #leaderboard{
-    height: 77vh;
+    height: 73vh;
     overflow: hidden;
     overflow-y: scroll;
     padding: 0px;
@@ -164,4 +164,11 @@ p{
 }
 .leaderboard_player:hover{
   background-image: linear-gradient(to right, green,white,green);
+}
+
+#intro{
+  display: flex;
+  /* margin: ; */
+  justify-content: center;
+  background-image: linear-gradient(to bottom, white, black, white, black, white,black, white, black, white);
 }

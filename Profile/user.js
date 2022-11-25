@@ -6,7 +6,6 @@ db.collection('users').get().then(snapshot=>{
         if(doc.data().username == user){
             document.getElementById('games').innerHTML=doc.data().games;
             document.getElementById('highest').innerHTML=doc.data().highestScore;
-            document.getElementById('rank').innerHTML="fuck";
         }
     })
 })

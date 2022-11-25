@@ -34,7 +34,22 @@
           <button type="submit" class="btn btn-primary">Login</button>
         </form>
       </div>
-      <h1>Welcome back <%= user %></h1>
+      <div id="intro">
+        <p
+          style="
+            display: inline;
+            border: 2px solid black;
+            border-radius: 30px;
+            font-size: 3vh;
+            font-family: 'Sofia', sans-serif;
+            background-color: aliceblue;
+            padding: 0.6vh;
+          "
+          class="font-effect-shadow-multiple"
+        >
+          Welcome back <%= user %>
+        </p>
+      </div>
       <div class="col-s-9 col-9 background">
         <div
           class="row"
@@ -120,72 +135,7 @@
         <!-- <ul id="leaderboard"> -->
         <!-- We need to create a leaderboard which shows score and profile photo and user name.. that will be done in backend but styling and ids i will decide -->
         <div class="list-group">
-          <ul id="leaderboard">
-            <a
-              href="#"
-              class="leaderboard_player list-group-item list-group-item-action"
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-              "
-            >
-              <img
-                src="./Profile/resources/modi.png"
-                alt="modi ki jai"
-                class="profile"
-              />
-              <p>Modi</p>
-              <p>9000 pts</p>
-            </a>
-            <a
-              href="#"
-              class="leaderboard_player list-group-item list-group-item-action"
-              >A third link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-            <a href="#" class="list-group-item list-group-item-action"
-              >A fourth link item</a
-            >
-          </ul>
+          <ul id="leaderboard"></ul>
         </div>
       </div>
     </div>

@@ -125,7 +125,7 @@ body{
   #guess{
     border: 2px solid black;
     border-radius: 20px;
-    background-color: rgb(83, 184, 187);
+    background-color:white;
     width: 25%;
     padding: 5px;
     margin: 2px 2px;
@@ -209,4 +209,56 @@ body{
   border: 2px solid black;
   border-radius: 10px;
   /* margin-left: 3pxs; */
+}
+
+.sender{
+  /* display: inline; */
+  color:green;
+  font-weight: bolder;
+  font-family: cursive;
+  font-size: small;
+}
+.reciever{
+  /* display: inline; */
+  color:rgb(128, 0, 0);
+  font-weight: bolder;
+  font-family: cursive;
+  font-size: small;
+}
+
+.message{
+  /* display: inline; */
+  font-family: Ubuntu, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight:600;
+}
+
+.score_item{
+  border: 2px solid black;
+  border-radius: 10px !important;
+  background-image: linear-gradient(to right, white, rgb(0, 200, 255), rgba(255, 255, 255));
+  margin: 5px 0px;
+  font-size: larger;
+  font-weight: bold;
+  font-family: cursive;
+  display: flex;
+  justify-content: space-around;
+}
+
+.score_item:hover{
+  background-image: linear-gradient(to right, rgb(62, 128, 0), white, rgb(62, 128, 0));
+}
+
+#final_scores{
+  float:right;
+  overflow: scroll;
+}
+
+#final_scores::-webkit-scrollbar{
+  display: none;
+}
+
+#winner{
+  margin: 3px 0px;
+  font-family: "Sofia", sans-serif;
+  font-size: 30px;
 }
